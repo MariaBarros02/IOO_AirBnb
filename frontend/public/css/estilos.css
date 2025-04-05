@@ -1,0 +1,135 @@
+/*GLOBAL*/
+
+:root{
+    --colorPrimario: #18181b;
+    --colorPrimarioII: #FFF;
+    --colorSecundario: #01A9B4;
+    --colorSecundarioII: #FF3052;
+
+    --fuentePrincipal: "MiFuente", sans-serif;
+    --fuenteSecundaria: "MiFuente2", sans-serif;
+   
+}
+
+@font-face {
+    font-family: 'MiFuente';
+    src: url('../fonts/Rounded\ Elegance\ Regular.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'MiFuente2';
+    src: url('../fonts/VersatyloRoundedPersonalUseOnly.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+html {
+    box-sizing: border-box;
+       
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+    margin: 0;
+}
+body{
+    font-family: var(--fuentePrincipal);
+}
+.fuenteSecundaria{
+    font-family: var(--fuenteSecundaria);
+}
+img{
+    width: 100%;
+}
+
+/*Navegacion*/
+
+.navegacion__link{
+    text-align: center;
+    margin: auto;
+    display: block;
+}
+.navegacion__link:hover{
+    background-color: #20202044;
+}
+
+@media (min-width: 1024px) {
+    .navegacion__link{
+        width: auto;
+    }
+}
+
+/*HERO*/
+.hero, .banner{
+    background-position: bottom;
+    background-size:cover ;
+    background-repeat: no-repeat;
+}
+.hero--bg_1{
+    background-image: url("../images/image_22.jpeg");
+}
+.hero--bg_2{
+    background-image: url("../images/image_23.jpeg");
+    background-position: center;
+}
+
+.hero--bg_3{
+    background-image: url("../images/image_5.jpg");
+    background-position: center;
+}
+.hero--bg_4{
+    background-image: url("../images/image_19.jpg");
+    background-position: center;
+
+}
+
+.hero--bg_5{
+    background-image: url("../images/image_13.jpg");
+    background-position: bottom;
+
+}
+.hero--bg_6{
+    background-image: url("../images/image_24.jpg");
+}
+
+.hero--bg_7{
+    background-image: url("../images/image_28.jpg");
+}
+
+
+
+.banner--bg_1{
+    background-image: url("../propiedades/id_2/4.jpg");
+}
+
+
+.banner--bg_2{
+    background-image: url("../images/image_2.jpg");
+}
+
+.banner--bg_3{
+    background-image: url("../images/image_19.jpg");
+}
+
+
+.banner--bg_4{
+    background-image: url("../images/image_24.jpg");
+}
+
+/*GUEST*/
+.guest__carousel{
+    height: 40rem;
+}
+
+@media (min-width: 768px) {
+    .guest__carousel{
+        height: 28rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .guest__carousel{
+        height: 24rem;
+    }
+}
