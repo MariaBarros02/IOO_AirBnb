@@ -2,10 +2,22 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { createAccessToken } from "../libs/jwt.js";
 export const register = async (req, res) => {
-  const { name, lastName, dateOfBirth, email, phone, address, password } =
-    req.body;
+  const {
+    name,
+    lastName,
+    dateOfBirth,
+    email,
+    phone,
+    address,
+    password,
+    confirmPassword,
+  } = req.body;
 
   try {
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Las contraseñas no coinciden" });
+    }
+
     const passwordHash = await bcrypt.hash(password, 10);
 
     const newUser = new User({
