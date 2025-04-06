@@ -14,8 +14,13 @@ export const register = async (req, res) => {
   } = req.body;
 
   try {
+    const userFound = await User.findOne({ email });
+    if (userFound) {
+      return res.status(400).json(["El correo ya existe"]);
+    }
+
     if (password !== confirmPassword) {
-      return res.status(400).json({ message: "Las contraseñas no coinciden" });
+      return res.status(400).json(["Las contraseñas no coinciden"]);
     }
 
     const passwordHash = await bcrypt.hash(password, 10);

@@ -6,25 +6,28 @@ import PropertyOwners from "./paginas/PropertyOwners";
 import Properties from "./paginas/Properties";
 import AboutUs from "./paginas/AboutUs";
 import Property from "./paginas/Property";
-import Login from "./paginas/Login";
+import Register from "./paginas/Register";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Index />}>
-          <Route index element={<Home />} />
-          <Route path="/guests" element={<Guests />} />
-          <Route path="/propertyOwners" element={<PropertyOwners />} />
-          <Route path="/AboutUs" element={<AboutUs />} />
-          <Route path="/login" element={<Login />} />
-        </Route>
-        <Route path="/properties" element={<Index />}>
-          <Route index element={<Properties />} />
-          <Route path="property/:idPropiedad" element={<Property />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />}>
+            <Route index element={<Home />} />
+            <Route path="/guests" element={<Guests />} />
+            <Route path="/propertyOwners" element={<PropertyOwners />} />
+            <Route path="/AboutUs" element={<AboutUs />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
+          <Route path="/properties" element={<Index />}>
+            <Route index element={<Properties />} />
+            <Route path="property/:idPropiedad" element={<Property />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
