@@ -7,6 +7,8 @@ import Properties from "./paginas/Properties";
 import AboutUs from "./paginas/AboutUs";
 import Property from "./paginas/Property";
 import Register from "./paginas/Register";
+import Login from "./paginas/Login";
+
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
@@ -20,6 +22,7 @@ function App() {
             <Route path="/propertyOwners" element={<PropertyOwners />} />
             <Route path="/AboutUs" element={<AboutUs />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
           </Route>
           <Route path="/properties" element={<Index />}>
             <Route index element={<Properties />} />

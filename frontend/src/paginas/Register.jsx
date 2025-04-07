@@ -17,8 +17,8 @@ const Register = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Redirigiendo a la página de inicio...");
-    if (isAuthenticated) navigate("/");
+    console.log("Redirigiendo a la página de inicio de sesion...");
+    if (isAuthenticated) navigate("/login");
   }, [isAuthenticated]);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -178,17 +178,14 @@ const Register = () => {
                 shadow
               />
             </div>
-            <div className="flex items-center gap-2">
-              <Checkbox id="agree" />
-              <Label htmlFor="agree" className="flex">
-                Estoy de acuerdo con los &nbsp;
-                <Link
-                  href="#"
-                  className="text-cyan-600 hover:underline dark:text-cyan-500"
-                >
-                  términos y condiciones
-                </Link>
-              </Label>
+
+            <div className="mb-2 block ">
+              <Link
+                to="/login"
+                className="text-[#0e7490] underline hover:text-blue-800"
+              >
+                ¿Tienes ya una cuenta? Inicia Sesión
+              </Link>
             </div>
             <Button type="submit">Registrarse</Button>
           </form>
