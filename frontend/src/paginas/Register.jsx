@@ -13,7 +13,7 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { singup, isAuthenticated, errors: registerErrors } = useAuth();
+  const { signup, isAuthenticated, errors: registerErrors } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const Register = () => {
   }, [isAuthenticated]);
 
   const onSubmit = handleSubmit(async (values) => {
-    singup(values);
+    signup(values);
   });
   return (
     <>
