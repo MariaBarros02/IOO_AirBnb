@@ -35,9 +35,15 @@ export const register = async (req, res) => {
       password: passwordHash,
     });
     const userSaved = await newUser.save();
-    const token = await createAccessToken({ id: userSaved._id });
-
-    res.cookie("token", token);
+    const token = await createAccessToken({
+      id: userSaved._id,
+      role: userSaved.role,
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
     res.json({
       id: userSaved._id,
       name: userSaved.name,
@@ -47,6 +53,7 @@ export const register = async (req, res) => {
       phone: userSaved.phone,
       address: userSaved.address,
       createdAt: userSaved.createdAt,
+      role: userSaved.role,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -65,9 +72,16 @@ export const login = async (req, res) => {
 
     if (!isMatch) return res.status(400).json(["Contraseña incorrecta"]);
 
-    const token = await createAccessToken({ id: userFound._id });
+    const token = await createAccessToken({
+      id: userFound._id,
+      role: userFound.role,
+    });
 
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false, // true solo si tienes HTTPS
+      sameSite: "lax",
+    });
     res.json({
       id: userFound._id,
       name: userFound.name,
@@ -84,7 +98,12 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  res.cookie("token", "", { expires: new Date(0) });
+  res.cookie("token", "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+    expires: new Date(0),
+  });
   return res.sendStatus(200);
 };
 

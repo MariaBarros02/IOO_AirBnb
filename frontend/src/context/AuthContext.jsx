@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { registerRequest, loginRequest } from "../api/auth.js";
-import { use } from "react";
+import { registerRequest, loginRequest, logoutRequest } from "../api/auth.js";
+import axios from "axios";
 
 const AuthContext = createContext();
 
@@ -32,9 +32,20 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await loginRequest(user);
       setIsAuthenticated(true);
+      setUser(res.data.user);
       console.log(res);
     } catch (error) {
       setErrors(error.response.data);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      const res = await logoutRequest({}, { withCredentials: true });
+      setIsAuthenticated(false);
+      setUser(null);
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
     }
   };
 
@@ -49,7 +60,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signin, singup, user, isAuthenticated, errors }}
+      value={{ signin, logout, singup, user, isAuthenticated, errors }}
     >
       {children}
     </AuthContext.Provider>
