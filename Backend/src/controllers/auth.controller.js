@@ -120,5 +120,6 @@ export const perfil = async (req, res) => {
     email: userFound.email,
     phone: userFound.phone,
     address: userFound.address,
+    role: userFound.role,
   });
 };
