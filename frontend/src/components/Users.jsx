@@ -135,8 +135,9 @@ const Users = () => {
       </div>
 
       {/* Paginación */}
-      <div className="flex justify-between items-center mt-6">
+      <div className="flex justify-center items-center mt-6">
         <Button
+          ckassName="ml-5"
           onClick={() => setPaginaActual((prev) => Math.max(1, prev - 1))}
           disabled={paginaActual === 1}
         >
