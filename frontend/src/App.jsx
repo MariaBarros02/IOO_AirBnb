@@ -8,7 +8,8 @@ import AboutUs from "./paginas/AboutUs";
 import Property from "./paginas/Property";
 import Register from "./paginas/Register";
 import Login from "./paginas/Login";
-import Users from "./components/Users";
+import AgregarPropiedad from "./paginas/AgregarPropiedad";
+import Administracion from "./paginas/Administracion";
 import PrivateRoute from "./components/PrivateRoutes";
 
 import { AuthProvider } from "./context/AuthContext";
@@ -25,14 +26,16 @@ function App() {
             <Route path="/AboutUs" element={<AboutUs />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            <Route element={<PrivateRoute requiredRole="admin" />}>
-              <Route path="/admin/usuarios" element={<Users />} />
-            </Route>
+            
           </Route>
           <Route path="/properties" element={<Index />}>
             <Route index element={<Properties />} />
             <Route path="property/:idPropiedad" element={<Property />} />
           </Route>
+          <Route path="/admin" element={<PrivateRoute requiredRole="admin" />}>
+              <Route index element={<Administracion />} />
+              <Route path="agregarPropiedad" element={<AgregarPropiedad/>} />
+         </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

@@ -11,8 +11,7 @@ const Users = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [usuarioActual, setUsuarioActual] = useState(null);
 
-  const { logout: useLogout } = useAuth();
-  const navigate = useNavigate();
+  
 
   const obtenerUsuarios = async (pagina = 1) => {
     try {
@@ -77,19 +76,11 @@ const Users = () => {
   }, [paginaActual]);
 
   return (
-    <section className="p-6">
+    <section className="py-6 px-10">
       {/* Header con botón de logout */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Usuarios</h1>
-        <Button
-          color="failure"
-          onClick={async () => {
-            await useLogout();
-            navigate("/login");
-          }}
-        >
-          Cerrar sesión
-        </Button>
+      <div className="w:10/12 md:w-9/12 mx-auto mb-6">
+        <h1 className="text-4xl font-bold">Usuarios</h1>
+        
       </div>
 
       {/* Tabla de usuarios */}
@@ -135,9 +126,9 @@ const Users = () => {
       </div>
 
       {/* Paginación */}
-      <div className="flex justify-center items-center mt-6">
+      <div className="flex justify-around items-center mt-6">
         <Button
-          ckassName="ml-5"
+          className="ml-5"
           onClick={() => setPaginaActual((prev) => Math.max(1, prev - 1))}
           disabled={paginaActual === 1}
         >
