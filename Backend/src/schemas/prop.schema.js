@@ -23,11 +23,6 @@ export const crearPropiedadSchema = z.object({
         required_error: "El barrio es requerido",
 
     }),
-    direccion: z
-      .string({
-        required_error: "La direccion es requerida",
-
-    }),
     descripcionBreve: z
       .string({
         required_error: "Una descripcion breve es requerida",

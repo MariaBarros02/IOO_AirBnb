@@ -1,5 +1,6 @@
 import HeaderPrincipal from "../layout/HeaderPrincipal";
 import Footer from "../layout/Footer";
+import { BiArrowBack } from "react-icons/bi";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -19,19 +20,29 @@ const Login = () => {
   useEffect(() => {
     console.log("Redirigiendo a la página de inicio de sesion...");
     if (isAuthenticated) navigate("/");
+
   }, [isAuthenticated]);
 
   const onSubmit = handleSubmit((data) => {
     signin(data);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   });
 
   return (
     <>
-      <HeaderPrincipal imagen="3" />
+
 
       <section className="bg-zinc-200 dark:bg-gray-900 flex items-center justify-center py-20">
         <div className="flex flex-col items-center w-full max-w-2xl px-4">
-          <h1 className="text-5xl font-bold mb-8">Iniciar sesión</h1>
+          <div className='flex items-center gap-5 mb-8'>
+            <Link className='bg-cyan-700 text-white rounded-full p-2 text-xl md:text-3xl  hover:bg-cyan-800 ' title='Regresar' to="/" >
+              <BiArrowBack />
+            </Link>
+            <h1 className="text-5xl font-bold ">Iniciar sesión</h1>
+          </div>
+          
           {signinErrors.length > 0 && (
             <div className="w-full max-w-md mb-4">
               {signinErrors.map((error, i) => (

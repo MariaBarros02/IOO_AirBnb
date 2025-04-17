@@ -32,14 +32,6 @@ const Home = () => {
             <img src="/propiedades/id_2/2.jpg" alt="propiedad_3" />
             <img src="/propiedades/id_2/4.jpg" alt="propiedad_4" />
           </div>
-          <Button
-            color="failure"
-            onClick={async () => {
-              await useLogout();
-            }}
-          >
-            Cerrar sesión
-          </Button>
         </div>
       </section>
 

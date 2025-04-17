@@ -8,36 +8,42 @@ import AboutUs from "./paginas/AboutUs";
 import Property from "./paginas/Property";
 import Register from "./paginas/Register";
 import Login from "./paginas/Login";
-import AgregarPropiedad from "./paginas/AgregarPropiedad";
+import AdminPropiedad from "./paginas/AdminPropiedad";
 import Administracion from "./paginas/Administracion";
 import PrivateRoute from "./components/PrivateRoutes";
+import { PropiedadProvider } from "./context/PropiedadContext";
 
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />}>
-            <Route index element={<Home />} />
-            <Route path="/guests" element={<Guests />} />
-            <Route path="/propertyOwners" element={<PropertyOwners />} />
-            <Route path="/AboutUs" element={<AboutUs />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            
-          </Route>
-          <Route path="/properties" element={<Index />}>
-            <Route index element={<Properties />} />
-            <Route path="property/:idPropiedad" element={<Property />} />
-          </Route>
-          <Route path="/admin" element={<PrivateRoute requiredRole="admin" />}>
+      <PropiedadProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />}>
+              <Route index element={<Home />} />
+              <Route path="/guests" element={<Guests />} />
+              <Route path="/propertyOwners" element={<PropertyOwners />} />
+              <Route path="/AboutUs" element={<AboutUs />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+
+            </Route>
+            <Route path="/properties" element={<Index />}>
+              <Route index element={<Properties />} />
+              <Route path="property/:idPropiedad" element={<Property />} />
+            </Route>
+
+            <Route path="/admin" element={<PrivateRoute requiredRole="admin" />}>
               <Route index element={<Administracion />} />
-              <Route path="agregarPropiedad" element={<AgregarPropiedad/>} />
-         </Route>
-        </Routes>
-      </BrowserRouter>
+              <Route path="adminPropiedad" element={<AdminPropiedad />} />
+              <Route path="adminPropiedad/:id" element={<AdminPropiedad />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </PropiedadProvider>
+
     </AuthProvider>
   );
 }

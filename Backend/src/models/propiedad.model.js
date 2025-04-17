@@ -4,88 +4,80 @@ const propiedadSchema = new mongoose.Schema({
     titulo: {
         type: String,
         required: true
-
     },
 
     precioDia: {
-        type: String,
+        type: Number,
         required: true
-
     },
 
     tipoInmueble: {
-        type: [String],
-        required: true
-
+        type: String,
+        required: true,
+        enum: ['casa', 'apartamento', 'apartaestudio', 'habitación']
     },
 
+    imagenes: {
+        type: [String],
+        default: []
+    },
     ciudad: {
         type: String,
         required: true
-
     },
 
     barrio: {
         type: String,
         required: true
-
     },
 
     direccion: {
         type: String,
-        unique: true,
-        required: true
-
-    },
-
-    imagenes: {
-        type: String,
-        
-
     },
 
     descripcionBreve: {
         type: String,
-        required: true
-
+        required: true,
+        maxlength: 350
     },
 
     descripcionCompleta: {
         type: String,
-        required: true
-
+        required: true,
+        maxlength: 650
     },
 
     habitaciones: {
-        type: String,
-        required: true
-
+        type: Number,
+        required: true,
+        min:0,
     },
 
     banos: {
-        type: String,
-        required: true
-
+        type: Number,
+        required: true,
+        min:0,
     },
 
     estacionamientos: {
-        type: String,
-
+        type: Number,
+        required: true,
+        min:0
     },
 
     areaInmueble: {
-        type: String,
-        required: true
-
+        type: Number,
+        required: true,
+        min: 0
     },
 
     invitadosMax: {
-        type: String,
-        required: true
-
+        type: Number,
+        required: true,
+        min: 0, 
     },
 
-    visivilidad: {
+    visibilidad: {
         type: Boolean,
         default: true
     }

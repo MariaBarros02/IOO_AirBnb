@@ -1,6 +1,7 @@
 import HeaderPrincipal from "../layout/HeaderPrincipal";
 import Footer from "../layout/Footer";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+import { BiArrowBack } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -26,11 +27,15 @@ const Register = () => {
   });
   return (
     <>
-      <HeaderPrincipal imagen="3" />
 
       <section className="bg-zinc-200 dark:bg-gray-900 flex items-center justify-center py-20">
         <div className="flex flex-col items-center">
-          <h1 className="text-5xl font-bold mb-8">Registro de usuario</h1>
+          <div className='flex items-center gap-5 mb-8'>
+            <Link className='bg-cyan-700 text-white rounded-full p-2 text-xl md:text-3xl  hover:bg-cyan-800 ' title='Regresar' to="/" >
+              <BiArrowBack />
+            </Link>
+            <h1 className="text-5xl font-bold ">Registro de usuario</h1>
+          </div>
           {registerErrors.length > 0 && (
             <div className="w-full max-w-md mb-4">
               {registerErrors.map((error, i) => (

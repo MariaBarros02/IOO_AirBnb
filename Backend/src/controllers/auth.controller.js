@@ -77,11 +77,8 @@ export const login = async (req, res) => {
       role: userFound.role,
     });
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false, // true solo si tienes HTTPS
-      sameSite: "lax",
-    });
+    res.cookie("token", token
+    );
     res.json({
       id: userFound._id,
       name: userFound.name,
@@ -108,18 +105,22 @@ export const logout = (req, res) => {
 };
 
 export const perfil = async (req, res) => {
-  const userFound = await User.findById(req.user.id);
-  if (!userFound)
-    return res.status(400).json({ message: "Usuario no encontrado" });
+  try {
+    const userFound = await User.findById(req.user.id);
+    if (!userFound)
+      return res.status(400).json({ message: "Usuario no encontrado" });
 
-  return res.json({
-    id: userFound._id,
-    name: userFound.name,
-    lastName: userFound.lastName,
-    dateOfBirth: userFound.dateOfBirth,
-    email: userFound.email,
-    phone: userFound.phone,
-    address: userFound.address,
-    role: userFound.role,
-  });
+    return res.json({
+      id: userFound._id,
+      name: userFound.name,
+      lastName: userFound.lastName,
+      dateOfBirth: userFound.dateOfBirth,
+      email: userFound.email,
+      phone: userFound.phone,
+      address: userFound.address,
+      role: userFound.role,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
