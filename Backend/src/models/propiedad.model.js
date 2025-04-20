@@ -50,19 +50,19 @@ const propiedadSchema = new mongoose.Schema({
     habitaciones: {
         type: Number,
         required: true,
-        min:0,
+        min: 0,
     },
 
     banos: {
         type: Number,
         required: true,
-        min:0,
+        min: 0,
     },
 
     estacionamientos: {
         type: Number,
         required: true,
-        min:0
+        min: 0
     },
 
     areaInmueble: {
@@ -74,7 +74,52 @@ const propiedadSchema = new mongoose.Schema({
     invitadosMax: {
         type: Number,
         required: true,
-        min: 0, 
+        min: 0,
+    },
+
+    inventario: {
+        habitaciones: [{
+            nombre: {
+                type: String,
+                required: true,
+            },
+            existencia: {
+                type: Boolean,
+                required: true,
+            }
+        }],
+        bano: [{
+            nombre: {
+                type: String,
+                required: true,
+            },
+            existencia: {
+                type: Boolean,
+                required: true,
+            }
+        }],
+        cocina: [{
+            nombre: {
+                type: String,
+                required: true,
+            },
+            existencia: {
+                type: Boolean,
+                required: true,
+            }
+        }],
+        entretenimiento: [{
+            nombre: {
+                type: String,
+                required: true,
+            },
+            existencia: {
+                type: Boolean,
+                required: true,
+            }
+        }],
+
+
     },
 
     visibilidad: {

@@ -18,7 +18,7 @@ export const crearPropiedad = async (req, res) => {
         const imagenesPaths = req.files.map(file => `/uploads/${file.filename}`);
 
         const { titulo, precioDia, tipoInmueble, ciudad, barrio, direccion, imagenes, descripcionBreve, descripcionCompleta, habitaciones,
-            banos, estacionamientos, areaInmueble, invitadosMax } = req.body;
+            banos, estacionamientos, areaInmueble, invitadosMax, inventario } = req.body;
 
 
         const nuevaPropiedad = new Propiedad({
@@ -36,6 +36,7 @@ export const crearPropiedad = async (req, res) => {
             estacionamientos,
             areaInmueble,
             invitadosMax,
+            inventario,
             imagenes: imagenesPaths
         })
         const propiedadGuardada = await nuevaPropiedad.save();
@@ -63,7 +64,7 @@ export const obtenerPropiedades = async (req, res) => {
             Propiedad.countDocuments(),
         ])
 
-        const paginasTotales = Math.ceil(total / limite);
+        const paginasTotales = (Math.ceil(total / limite)) === 0 ? 1 : Math.ceil(total / limite);
 
         res.json({
             propiedades,
@@ -92,17 +93,27 @@ export const obtenerPropiedad = async (req, res) => {
 export const actualizarPropiedad = async (req, res) => {
     try {
         const { id } = req.params;
-        const imagenesExistentes = JSON.parse(req.body.imagenesExistentes || '[]');
+        const imagenesExistentes = JSON.parse(req.body.imagenesExistentes || [] );
         const nuevasImagenes = req.files?.map(file => `/uploads/${file.filename}`) || [];
+        const imagenesEliminadas = JSON.parse(req.body.imagenesEliminadas || [] )
         
         // Combinar imágenes existentes (que no se borraron) con las nuevas
         const todasLasImagenes = [...imagenesExistentes, ...nuevasImagenes];
-        
+    
         await Propiedad.findByIdAndUpdate(id, {
             ...req.body,
             imagenes: todasLasImagenes
         });
-        
+    
+        if (imagenesEliminadas) {
+            imagenesEliminadas.forEach(imagen => {
+                const imagePath = path.join(__directorioArchivo, '../public', imagen);
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath);
+                }
+            });
+        }
+
         res.json({ success: true });
 
     } catch (error) {

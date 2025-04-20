@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Label, TextInput, Select, FileInput, HelperText, Textarea, Modal, ModalBody, ModalHeader} from "flowbite-react";
+import { Button, Label, TextInput, Select, FileInput, HelperText, Textarea, Modal, ModalBody, ModalHeader } from "flowbite-react";
 import { Link, useNavigate } from 'react-router-dom';
-import { BiTrash, BiArrowBack } from "react-icons/bi";
+import { BiTrash, BiArrowBack, BiPlus } from "react-icons/bi";
 import { HiCheckCircle } from 'react-icons/hi';
 import { formatearDinero } from '../utils/formatearDinero';
 import { usePropiedad } from '../context/PropiedadContext.jsx';
 import HeaderAdministrador from '../layout/HeaderAdministrador';
 
+const CATEGORIAS_INVENTARIO = ['habitaciones', 'bano', 'cocina', 'entretenimiento']
 
 const AdminPropiedad = () => {
     const navigate = useNavigate();
@@ -29,16 +30,28 @@ const AdminPropiedad = () => {
         banos: 0,
         estacionamientos: 0,
         areaInmueble: 0,
-        invitadosMax: 0
+        invitadosMax: 0,
+        inventario: {
+            habitaciones: [],
+            bano: [],
+            cocina: [],
+            entretenimiento: []
+        },
     });
 
     const [imagenes, setImagenes] = useState([]);
     const [imagenesExistentes, setImagenesExistentes] = useState([]);
+    const [imagenesEliminadas, setImagenesEliminadas] = useState([]);
     const [precioDiaFormateado, setPrecioDiaFormateado] = useState('');
+    const [nuevoItem, setNuevoItem] = useState({
+        categoria: 'habitaciones',
+        nombre: '',
+    })
 
 
     useEffect(() => {
         if (propiedad?._id) {
+            console.log(propiedad.inventario)
             setDatosFormulario({
                 titulo: propiedad.titulo || '',
                 precioDia: propiedad.precioDia || '',
@@ -53,11 +66,19 @@ const AdminPropiedad = () => {
                 estacionamientos: propiedad.estacionamientos || 0,
                 areaInmueble: propiedad.areaInmueble || 0,
                 invitadosMax: propiedad.invitadosMax || 0,
+                inventario: propiedad.inventario || {
+                    habitaciones: propiedad.inventario?.habitaciones || [],
+                    bano: propiedad.inventario?.bano || [],
+                    cocina: propiedad.inventario?.cocina || [],
+                    entretenimiento: propiedad.inventario?.entretenimiento || []
+                },
             });
             setImagenesExistentes(propiedad.imagenes || []);
             setPrecioDiaFormateado(formatearDinero(propiedad.precioDia || 0));
         }
     }, [propiedad]);
+
+    //Funciones para manejar los inputs
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -83,25 +104,122 @@ const AdminPropiedad = () => {
     };
 
     const eliminarImagenExistente = (index) => {
-        setImagenesExistentes(prev => prev.filter((_, i) => i !== index));
+        setImagenesExistentes(prev => {
+            const nuevasImagenesExistentes = prev.filter((_, i) => i !== index);
+            const nuevasImagenesEliminadas = [prev[index]];
+    
+            // Actualiza el estado con las nuevas variables
+            setImagenesEliminadas(prevEliminadas => [...prevEliminadas, ...nuevasImagenesEliminadas]);
+    
+            return nuevasImagenesExistentes;
+        });
     };
 
     const eliminarImagenNueva = (index) => {
         setImagenes(prev => prev.filter((_, i) => i !== index));
     };
 
+    // Funciones para manejar el inventario
+
+    const handleNuevoItemChange = (e) => {
+        const { name, value } = e.target;
+        setNuevoItem(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    }
+
+    const agregarItem = () => {
+        if (!nuevoItem.nombre.trim() || !nuevoItem.categoria) return;
+
+        const nuevoItemObj = {
+            nombre: nuevoItem.nombre.trim(),
+            existencia: true
+        }
+
+        setDatosFormulario(prev => {
+            if (!prev.inventario.hasOwnProperty(nuevoItem.categoria)) {
+                console.error(`Categoría ${nuevoItem.categoria} no existe en el inventario`);
+                return prev;
+            }
+
+            return {
+                ...prev,
+                inventario: {
+                    ...prev.inventario,
+                    [nuevoItem.categoria]: [
+                        ...(prev.inventario[nuevoItem.categoria] || []),
+                        nuevoItemObj
+                    ]
+                }
+            };
+        });
+
+        setNuevoItem(prev => ({ ...prev, nombre: '' }));
+    };
+
+    const eliminarItem = (categoria, index) => {
+        setDatosFormulario(prev => {
+            const nuevaCategoria = [...prev.inventario[categoria]];
+            nuevaCategoria.splice(index, 1);
+
+            return {
+                ...prev,
+                inventario: {
+                    ...prev.inventario,
+                    [categoria]: nuevaCategoria
+                }
+            }
+        })
+    }
+
+    const cambiarExistencia = (categoria, index) => {
+        setDatosFormulario(prev => {
+            const nuevaCategoria = [...prev.inventario[categoria]];
+            nuevaCategoria[index] = {
+                ...nuevaCategoria[index],
+                existencia: !nuevaCategoria[index].existencia
+            }
+            return {
+                ...prev,
+                inventario: {
+                    ...prev.inventario,
+                    [categoria]: nuevaCategoria
+                }
+            }
+        })
+    }
+    // Manejar el envio
     const handleSubmit = async (e) => {
         e.preventDefault();
         setEnviando(true)
         try {
             const formData = new FormData();
+
             Object.entries(datosFormulario).forEach(([key, value]) => {
-                formData.append(key, value);
+                if (key !== 'inventario') {
+                    formData.append(key, value);
+                }
+            });
+
+            const inventarioParaEnviar = {
+                habitaciones: datosFormulario.inventario.habitaciones || [],
+                bano: datosFormulario.inventario.bano || [],
+                cocina: datosFormulario.inventario.cocina || [],
+                entretenimiento: datosFormulario.inventario.entretenimiento || []
+            };
+
+            Object.entries(inventarioParaEnviar).forEach(([categoria, items]) => {
+                items.forEach((item, index) => {
+                    formData.append(`inventario[${categoria}][${index}][nombre]`, item.nombre);
+                    formData.append(`inventario[${categoria}][${index}][existencia]`, item.existencia);
+                });
             });
 
             if (propiedad?._id) {
                 // Enviar las imágenes existentes que queremos conservar
                 formData.append('imagenesExistentes', JSON.stringify(imagenesExistentes));
+                formData.append('imagenesEliminadas', JSON.stringify(imagenesEliminadas));
             }
 
             imagenes.forEach(img => {
@@ -145,13 +263,15 @@ const AdminPropiedad = () => {
 
                 window.scrollTo(0, 0)
 
+                setPropiedad('');
             }
 
-            setPropiedad('');
 
         } catch (error) {
             console.error('Error:', error);
             setError(error.response?.data?.message || error.message || 'Ocurrió un error');
+        } finally {
+            setEnviando(false)
         }
     };
 
@@ -172,8 +292,8 @@ const AdminPropiedad = () => {
                     </h1>
                 </div>
             </div>
-            <Modal show={openModal}  onClose={() => setOpenModal(false)} popup>
-                
+            <Modal show={openModal} onClose={() => setOpenModal(false)} popup>
+
                 <ModalBody>
                     <div className="text-center pt-10">
                         <HiCheckCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
@@ -355,6 +475,93 @@ const AdminPropiedad = () => {
                             ))}
                         </div>
                     </div>
+
+
+
+                    {/* Sección de Inventario */}
+                    <p className='mt-2 ml-6 text-lg'>Inventario de la Propiedad</p>
+                    <div className='border-2 py-3 px-10'>
+                        <div className="mb-4">
+                            <Label htmlFor="categoria-item" className="block mb-2 text-sm font-medium text-gray-900">
+                                Categoría
+                            </Label>
+                            <Select
+                                id="categoria-item"
+                                name="categoria"
+                                value={nuevoItem.categoria}
+                                onChange={handleNuevoItemChange}
+                                className="w-full capitalize"
+                            >
+
+                                {CATEGORIAS_INVENTARIO.map(categoria => (
+                                    <option key={categoria} value={categoria} className='normal-case'>
+                                        {categoria === 'bano'
+                                        ? 'Baño' // Solución directa para este caso específico
+                                        : categoria === 'entretenimiento'? 'Entretenimiento y ocio' : categoria.charAt(0).toUpperCase() + categoria.slice(1)}
+                                    </option>
+                                ))}
+                            </Select>
+                        </div>
+
+                        <div className="flex gap-2 mb-6">
+                            <TextInput
+                                type="text"
+                                name="nombre"
+                                value={nuevoItem.nombre}
+                                onChange={handleNuevoItemChange}
+                                placeholder="Nombre del artículo"
+                                className="flex-grow"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        agregarItem();
+                                    }
+                                }}
+                            />
+                            <Button onClick={agregarItem} color="success" className="px-3">
+                                <BiPlus className="text-xl" />
+                            </Button>
+                        </div>
+
+                        {CATEGORIAS_INVENTARIO.map(categoria => (
+                            <div key={categoria} className="mb-6">
+                                <h3 className="text-lg font-semibold mb-2">
+                                    {categoria === 'bano'
+                                        ? 'Baño'
+                                        : categoria === 'entretenimiento'? 'Entretenimiento y ocio' : categoria.charAt(0).toUpperCase() + categoria.slice(1)}
+                                </h3>
+                                {datosFormulario.inventario[categoria]?.length > 0 ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                                        {datosFormulario.inventario[categoria].map((item, index) => (
+                                            <div key={`${categoria}-${index}`} className="flex items-center justify-between p-2 border rounded">
+                                                <div className="flex items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={item.existencia}
+                                                        onChange={() => cambiarExistencia(categoria, index)}
+                                                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                                                    />
+                                                    <span className="ml-2 text-sm font-medium text-gray-900">
+                                                        {item.nombre}
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => eliminarItem(categoria, index)}
+                                                    className="text-red-500 hover:text-red-700"
+                                                >
+                                                    <BiTrash />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-sm text-gray-500">No hay artículos en esta categoría</p>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
 
 
                     <Button type="submit" className='uppercase' size="xl" disabled={enviando} >{(propiedad?._id) ? "Actualizar Propiedad" : "Agregar propiedad"}</Button>

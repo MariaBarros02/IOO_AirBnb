@@ -39,11 +39,7 @@ export const register = async (req, res) => {
       id: userSaved._id,
       role: userSaved.role,
     });
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-    });
+    
     res.json({
       id: userSaved._id,
       name: userSaved.name,

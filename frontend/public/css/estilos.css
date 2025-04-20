@@ -6,38 +6,21 @@
     --colorSecundario: #01A9B4;
     --colorSecundarioII: #FF3052;
 
-    --fuentePrincipal: "MiFuente", sans-serif;
-    --fuenteSecundaria: "MiFuente2", sans-serif;
    
-}
-
-@font-face {
-    font-family: 'MiFuente';
-    src: url('../fonts/Rounded\ Elegance\ Regular.otf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'MiFuente2';
-    src: url('../fonts/VersatyloRoundedPersonalUseOnly.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
 }
 
 
 html {
+    
     box-sizing: border-box;
        
+}
+body {
+    font-family: "National Park", sans-serif;
 }
 *, *:before, *:after {
     box-sizing: inherit;
     margin: 0;
-}
-body{
-    font-family: var(--fuentePrincipal);
-}
-.fuenteSecundaria{
-    font-family: var(--fuenteSecundaria);
 }
 img{
     width: 100%;
@@ -45,20 +28,6 @@ img{
 
 /*Navegacion*/
 
-.navegacion__link{
-    text-align: center;
-    margin: auto;
-    display: block;
-}
-.navegacion__link:hover{
-    background-color: #20202044;
-}
-
-@media (min-width: 1024px) {
-    .navegacion__link{
-        width: auto;
-    }
-}
 
 /*HERO*/
 .hero, .banner{

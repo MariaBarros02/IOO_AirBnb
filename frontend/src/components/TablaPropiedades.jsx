@@ -83,8 +83,8 @@ const TablaPropiedades = () => {
             {msg && <Notificacion notificacion={toast} />}
             <div className=" w:10/12 md:w-9/12 mx-auto mb-6">
                 <div className='flex justify-between items-center'>
-                    <h1 className="text-4xl font-bold">Propiedades</h1>
-                    <Link className='bg-lime-600 p-2 text-white rounded-lg text-center  text-xs md:text-base hover:bg-lime-700' to="/admin/adminPropiedad" >
+                    <h1 className="text-4xl font-bold uppercase">Propiedades</h1>
+                    <Link className='bg-lime-600 p-2 text-white rounded-lg text-center  text-xs  hover:bg-lime-700' to="/admin/adminPropiedad" >
                         Agregar Propiedad
                     </Link>
 
@@ -197,7 +197,7 @@ const TablaPropiedades = () => {
                 <Button
                     className="ml-5"
                     onClick={() => setPaginaActual((prev) => Math.max(1, prev - 1))}
-                    disabled={paginaActual === 1}
+                    disabled={ paginaActual === 1}
                 >
                     Anterior
                 </Button>

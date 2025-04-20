@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Modal, Label, TextInput } from "flowbite-react";
+import { Button, Modal, Label, TextInput, ModalHeader, ModalBody } from "flowbite-react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -11,7 +12,8 @@ const Users = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [usuarioActual, setUsuarioActual] = useState(null);
 
-  
+  const [openModalEliminar, setOpenModalEliminar] = useState(false)
+
 
   const obtenerUsuarios = async (pagina = 1) => {
     try {
@@ -34,6 +36,7 @@ const Users = () => {
   };
 
   const eliminarUsuario = async (id) => {
+    
     try {
       await axios.delete(`http://localhost:5000/admin/usuarios/${id}`, {
         withCredentials: true,
@@ -42,6 +45,7 @@ const Users = () => {
     } catch (error) {
       console.error("Error al eliminar el usuario:", error);
     }
+    cerrarModalEliminar()
   };
 
   const abrirModal = (usuario) => {
@@ -53,6 +57,16 @@ const Users = () => {
     setUsuarioActual(null);
     setModalOpen(false);
   };
+
+  const abrirModalEliminar = (usuario) =>{
+    setUsuarioActual(usuario);
+    setOpenModalEliminar(true)
+  }
+
+  const cerrarModalEliminar = () => {
+    setUsuarioActual(null);
+    setOpenModalEliminar(false)
+  }
 
   const actualizarUsuario = async (e) => {
     e.preventDefault();
@@ -79,8 +93,8 @@ const Users = () => {
     <section className="py-6 px-10">
       {/* Header con botón de logout */}
       <div className="w:10/12 md:w-9/12 mx-auto mb-6">
-        <h1 className="text-4xl font-bold">Usuarios</h1>
-        
+        <h1 className="text-4xl font-bold uppercase">Usuarios</h1>
+
       </div>
 
       {/* Tabla de usuarios */}
@@ -113,7 +127,7 @@ const Users = () => {
                     <Button
                       size="xs"
                       color="failure"
-                      onClick={() => eliminarUsuario(user._id)}
+                      onClick={() => abrirModalEliminar(user)}
                     >
                       Eliminar
                     </Button>
@@ -221,6 +235,28 @@ const Users = () => {
           )}
         </Modal.Body>
       </Modal>
+      <Modal show={openModalEliminar} size="md" onClose={cerrarModalEliminar} popup>
+        <ModalHeader />
+        <ModalBody>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-800">
+              ¿Estás segur@ de que quieres eliminar este usuario?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={() => eliminarUsuario(usuarioActual._id)}>
+                Si, estoy segur@
+              </Button>
+              <Button color="gray" onClick={cerrarModalEliminar}>
+                No, cancelar
+              </Button>
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
+
+
+
     </section>
   );
 };
