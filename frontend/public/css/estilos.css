@@ -16,7 +16,7 @@ html {
        
 }
 body {
-    font-family: "National Park", sans-serif;
+    font-family: "Tuffy", sans-serif;
 }
 *, *:before, *:after {
     box-sizing: inherit;
@@ -34,38 +34,8 @@ img{
     background-position: bottom;
     background-size:cover ;
     background-repeat: no-repeat;
+    background-image: url("../images/hero.jpg");
 }
-.hero--bg_1{
-    background-image: url("../images/image_22.jpeg");
-}
-.hero--bg_2{
-    background-image: url("../images/image_23.jpeg");
-    background-position: center;
-}
-
-.hero--bg_3{
-    background-image: url("../images/image_5.jpg");
-    background-position: center;
-}
-.hero--bg_4{
-    background-image: url("../images/image_19.jpg");
-    background-position: center;
-
-}
-
-.hero--bg_5{
-    background-image: url("../images/image_13.jpg");
-    background-position: bottom;
-
-}
-.hero--bg_6{
-    background-image: url("../images/image_24.jpg");
-}
-
-.hero--bg_7{
-    background-image: url("../images/image_28.jpg");
-}
-
 
 
 .banner--bg_1{

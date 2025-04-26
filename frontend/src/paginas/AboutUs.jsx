@@ -11,13 +11,17 @@ const AboutUs = () => {
         imagen="6"
       />
 
-      <section className="bg-gray-200 py-10">
-        <div className="w-10/12 m-auto grid grid-cols-1 gap-3 items-center md:grid-cols-2">
-          
+      <section className=" py-10">
+        <div className="w-10/12 m-auto grid grid-cols-1 gap-3 items-center lg:grid-cols-2">
+
           <img src="/images/image_15.jpg" alt="advisory" className="rounded-full lg:w-4/6 m-auto lg:col-start-2" />
           <div className="row-start-1 text-center " >
-            <h2 className="text-5xl font-bold uppercase mb-3 lg:text-7xl "><span className="text-cyan-600">About</span> Us</h2>
-            <p className="">"Welcome to Marketoak, your premier choice for short and mid-term accommodations in the in the vibrant landscapes of the United States, our company offers anexceptional alternative to traditional hotel stays, providing you with the comfort and convenience of a home away from home. Our methodology mirrors the innovative approach of Airbnb, ensuring that our guests experience the best in local living. Recently, we have proudly joined the Beyond Corporate Housing Network, a distinguished nationwide community for companies specializing in midterm stays. This affiliation allows us to elevate our standards and expand our reach, providing unparalleled services to our guests."</p>
+            <h2 className="text-4xl font-bold uppercase mb-3 md:text-5xl "><span className="text-cyan-600">sobre</span> nosotros</h2>
+            <p className="">En el corazón de nuestra empresa hay una historia de pasión por la hospitalidad y visión innovadora. Todo comenzó cuando un grupo de profesionales del sector inmobiliario y turístico identificó una necesidad común: conectar propiedades excepcionales con huéspedes exigentes, ofreciendo experiencias memorables mientras los propietarios disfrutaban de ingresos pasivos sin complicaciones.
+
+              Con años de experiencia acumulada en gestión de propiedades, marketing digital y servicio al cliente, decidimos crear una plataforma diferente. Una donde la tecnología inteligente se combina con el toque humano, donde cada propiedad cuenta una historia única y cada huésped se siente como en casa.
+
+              Lo que empezó como un proyecto local hoy es una red en expansión, uniendo propietarios y viajeros con un mismo objetivo: experiencias auténticas, rentabilidad asegurada y servicio impecable. Nuestro equipo multicultural - formado por expertos en bienes raíces, especialistas en hospitalidad y apasionados por la innovación - trabaja cada día para superar expectativas.</p>
           </div>
 
 
@@ -27,26 +31,26 @@ const AboutUs = () => {
         <div className="grid grid-cols-1 w-10/12 m-auto text-center md:grid-cols-2 gap-5 ">
           <CardFoto
             imagen="/images/image_8.jpg"
-            titulo="MISSION"
+            titulo="MISIÓN"
             clasesTitulo="text-3xl"
-            parrafo="At Marketoak Consulting, our mission is to provide high-quality short and mid-term accommodation solutions that exceed our guest's expectations. We are dedicated to creating a seamless and comfortable stay experience, offering personalized service and top-notch amenities. Our goal is to make every guest feel at home, whether they are traveling for business, pleasure, or both. Additionally, we strive to support our clients with comprehensive credit advisory services and business creation assistance, ensuring their overall success and satisfaction."
-          
+            parrafo="Convertir cada propiedad en una oportunidad de éxito, ofreciendo soluciones integrales de gestión inmobiliaria que maximicen su rentabilidad mientras elevamos los estándares de hospitalidad. Nos comprometemos a ser el puente perfecto entre propietarios y huéspedes, mediante tecnología innovadora, servicio excepcional y estrategias personalizadas que transformen espacios en experiencias memorables y inversiones prósperas."
+
           />
           <CardFoto
             imagen="/images/image_9.jpg"
-            titulo="VISION"
+            titulo="VISIÓN"
             clasesTitulo="text-3xl"
-            parrafo="Our vision is to be the leading provider of short and mid-term accommodations in San Francisco and beyond, setting the standard for excellence in the industry. We aim to continuously enhance our offerings, expand our property portfolio, and innovate our services to meet the evolving needs of our guests. By fostering a community of satisfied clients and leveraging our affiliation with Beyond Corporate Housing Network, we envision a future where Marketoak is synonymous with quality, comfort, and exceptional service."
-          
+            parrafo="Liderar la revolución en la gestión de propiedades vacacionales, siendo reconocidos como el referente de confianza y excelencia en el sector. Aspiramos a expandir nuestra red globalmente, manteniendo siempre el equilibrio perfecto entre rentabilidad para propietarios y autenticidad para viajeros. Visualizamos un futuro donde cada propiedad bajo nuestro cuidado no solo genere ingresos óptimos, sino que también contribuya a redefinir la manera en que el mundo experimenta la hospitalidad."
+
           />
-          
+
         </div>
       </section>
       <section className="bg-zinc-950">
         <div className="w-10/12 m-auto text-center text-white grid grid-cols-1 gap-8 py-16 lg:grid-cols-2 leading-relaxed ">
           <div>
             <p>
-              You can contact us though these means to rent our accomodations or adress any questions you may have
+              Puedes contactarnos a través de estos medios para rentar nuestros alojamientos o resolver cualquier duda que puedas tener.
             </p>
             <div >
               <Link target="_blank" to="https://www.instagram.com/marketoakconsulting?igsh=MzRlODBiNWFlZA==">
@@ -57,33 +61,33 @@ const AboutUs = () => {
             </div>
           </div>
           <div >
-            <p>We will respond to your message or call as soon as possible.</p>
-            <p>Email: admin@marketoakconsult.com</p>
+            <p>Te responderemos tan pronto como podamos</p>
+            <p>Email: correo@tuempresa.com</p>
             <p>Adress: 2603 Camino Ramón, Ste. 200. CA 94583</p>
             <p>Tel: 888-383-4390</p>
           </div>
         </div>
       </section>
       <section className="bg-zinc-200 py-16">
-        <h2 className="uppercase text-center mb-10 font-bold text-5xl md:text-6xl">Our <span className="text-cyan-600">principal</span> skills</h2>
+        <h2 className="uppercase text-center mb-10 font-bold text-4xl md:text-5xl">Nuestras <span className="text-cyan-600">habilidades</span> principales</h2>
         <div className="w-10/12 m-auto grid grid-cols-1 gap-5 lg:grid-cols-3 text-center">
           <CardFoto
             imagen="/images/image_10.jpg"
-            titulo="SEGURITY"
+            titulo="SEGURIDAD"
             clasesTitulo="text-rose-600 text-4xl"
-            parrafo="We take pride in providing not just a place to stay but a home where you feel secure and entirely satisfied. We take your well-being seriously and strive to maintain a safe and protected environment. In addition to safety, we are committed to delivering a service that ensures your satisfaction at every moment. Our spaces are designed with comfort in mind, ensuring that every corner of your accommodation is a cozy haven."
+            parrafo="Nos enorgullece ofrecer no solo un lugar para quedarse, sino un hogar donde se sienta seguro y completamente satisfecho. Tomamos su bienestar con seriedad y nos esforzamos por mantener un entorno seguro y protegido. Además de la seguridad, estamos comprometidos a brindar un servicio que garantice su satisfacción en cada momento. Nuestros espacios están diseñados pensando en la comodidad, asegurando que cada rincón de su alojamiento sea un refugio acogedor."
           />
           <CardFoto
             imagen="/images/image_11.jpg"
-            titulo="QUALITY"
+            titulo="CALIDAD"
             clasesTitulo="text-rose-600 text-4xl"
-            parrafo="We strive to exceed your expectations by providing personalized service that caters to your individual preferences. Guest satisfaction is our priority, and we work tirelessly to create an experience that you will fondly remember. By choosing us, you are selecting more than just a place to stay; you are choosing a home where safety and satisfaction come together to offer an unparalleled lodging experience. Contact us today to reserve your next retreat of elegance and comfort."
+            parrafo="Nos esforzamos por superar sus expectativas ofreciendo un servicio personalizado que se adapte a sus preferencias individuales. La satisfacción del huésped es nuestra prioridad, y trabajamos incansablemente para crear una experiencia que recordará con cariño. Al elegirnos, no solo está seleccionando un lugar para alojarse; está eligiendo un hogar donde la seguridad y la satisfacción se unen para ofrecer una experiencia de hospedaje sin igual. Contáctenos hoy mismo para reservar su próximo retiro de elegancia y comodidad."
           />
           <CardFoto
             imagen="/images/image_12.jpg"
-            titulo="PRICE"
+            titulo="PRECIOS"
             clasesTitulo="text-rose-600 text-4xl"
-            parrafo="We recognize the importance of providing high-quality amenities at affordable prices, ensuring an exceptional stay for our guests. Our goal is to strike a perfect balance between affordability and quality, ensuring that each customer receives maximum value for their investment. We believe that quality should not be compromised by price, and therefore, we strive to offer accommodations that meet the highest standards while remaining accessible to all."
+            parrafo="Reconocemos la importancia de ofrecer amenidades de alta calidad a precios accesibles, garantizando una estancia excepcional para nuestros huéspedes. Nuestro objetivo es lograr el equilibrio perfecto entre asequibilidad y calidad, asegurando que cada cliente reciba el máximo valor por su inversión. Creemos que la calidad no debe verse comprometida por el precio y, por lo tanto, nos esforzamos por ofrecer alojamientos que cumplan con los más altos estándares mientras siguen siendo accesibles para todos."
           />
         </div>
       </section>

@@ -1,8 +1,9 @@
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import propiedades from "../data/propiedades";
 import HeaderPrincipal from "../layout/HeaderPrincipal";
 import Footer from "../layout/Footer"
-import Space from "../components/Space"
 import { Carousel, Button, Timeline, Breadcrumb } from "flowbite-react";
 import { HiArrowNarrowRight, HiHome } from "react-icons/hi";
 
@@ -10,31 +11,50 @@ const Property = () => {
 
   const { idPropiedad } = useParams();
 
-  const { id, titulo, ubicacion, descripcionCompleta, imagenes, sala, habitaciones, link } = propiedades[idPropiedad - 1]
+  const [propiedad, setPropiedad] = useState();
+
+  useEffect(() => {
+    cargarPropiedad();
+  }, []);
+
+
+  const cargarPropiedad = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/admin/propiedad/${idPropiedad}`, {
+        withCredentials: true,
+      })
+      setPropiedad(response.data);
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  if (!propiedad) return <p className="text-center mt-10">Cargando propiedad...</p>;
+
   return (
     <>
       <HeaderPrincipal
-        imagen="1"
       />
       <section className="pt-16 pb-10 bg-zinc-100">
         <div className="w-10/12 m-auto">
 
           <Breadcrumb className="mb-5 hidden md:block" aria-label="Default breadcrumb example">
             <Breadcrumb.Item href="/" icon={HiHome}>
-              Home
+              Inicio
             </Breadcrumb.Item>
-            <Breadcrumb.Item href="/properties">Properties</Breadcrumb.Item>
-            <Breadcrumb.Item>{titulo}</Breadcrumb.Item>
+            <Breadcrumb.Item href="/properties">Propiedades</Breadcrumb.Item>
+            <Breadcrumb.Item>{propiedad.titulo}</Breadcrumb.Item>
           </Breadcrumb>
-          <h2 className="text-2xl md:text-5xl font-bold mb-5">{ubicacion}: <span className="text-rose-600">{titulo}</span></h2>
+          <h2 className="text-2xl md:text-5xl font-bold mb-5">{propiedad.titulo}</h2>
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
             <div className=" lg:col-span-3">
 
               <div className="h-56 md:h-96">
                 <Carousel>
                   {
-                    imagenes.map((imagen, index) => (
-                      <img src={`/propiedades/id_${id}/${imagen}.jpg`} alt="..." key={index} />
+                    propiedad.imagenes.map((imagen, index) => (
+                      <img src={`http://localhost:5000${imagen}`} alt="..." key={index} />
                     )
                     )}
                 </Carousel>
@@ -43,7 +63,7 @@ const Property = () => {
               </div>
 
 
-              <Button className="w-full my-5 uppercase font-bold tracking-widest block" outline gradientDuoTone="cyanToBlue" size="xl" href={link} target="_blank">
+              <Button className="w-full my-5 uppercase font-bold tracking-widest block" outline gradientDuoTone="cyanToBlue" size="xl" href="#" target="_blank">
                 Contact us to check availability!
               </Button>
 
@@ -64,7 +84,7 @@ const Property = () => {
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25227.38069460778!2d-122.42865942614189!3d37.780135176332664!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858083a662307b%3A0xfd99010c2dc1f950!2sSoMa%2C%20San%20Francisco%2C%20California%2C%20EE.%20UU.!5e0!3m2!1ses-419!2sco!4v1720104557173!5m2!1ses-419!2sco"
                 allowFullScreen="" referrerPolicy="no-referrer-when-downgrade">
               </iframe>
-              <p >{descripcionCompleta}</p>
+              <p >{propiedad.descripcionCompleta}</p>
             </div>
           </div>
         </div>
@@ -79,7 +99,7 @@ const Property = () => {
                 <Timeline.Time className="text-zinc-700">Living Room</Timeline.Time>
                 <Timeline.Title className=" font-bold text-xl">The living room is a great place to enjoy fun and memorable moments after a busy day or outing.</Timeline.Title>
                 <Timeline.Body className="text-zinc-700" >
-                  {sala}
+                  
                 </Timeline.Body>
 
               </Timeline.Content>
@@ -90,7 +110,7 @@ const Property = () => {
                 <Timeline.Time className="text-zinc-700">Bedroom</Timeline.Time>
                 <Timeline.Title>Rest in one of these comfortable rooms, carefully designed and furnished to provide everything you need</Timeline.Title>
                 <Timeline.Body className="text-zinc-700">
-                  {habitaciones}
+                  
                 </Timeline.Body>
               </Timeline.Content>
             </Timeline.Item>
@@ -109,7 +129,7 @@ const Property = () => {
               <Timeline.Content>
                 <Timeline.Time className="text-zinc-700">Bathroom</Timeline.Time>
                 <Timeline.Title >The aparment features a relaxing bathroom with clean towels and basic toiletries to ensure maximum comfort and convenience.</Timeline.Title>
-                <Timeline.Body className="text-zinc-700"> 
+                <Timeline.Body className="text-zinc-700">
                   Shower, vanity, mirror, toilet, towels, essential toiletries
                 </Timeline.Body>
               </Timeline.Content>
@@ -118,7 +138,7 @@ const Property = () => {
         </div>
 
       </section>
-      <Footer />
+      <Footer /> 
     </>
   )
 }

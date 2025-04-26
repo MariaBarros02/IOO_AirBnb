@@ -1,17 +1,16 @@
 import Navegacion from "./Navegacion"
 import { Carousel } from "flowbite-react";
 
-function HeaderPrincipal({ imagen }) {
+function HeaderPrincipal() {
     return (
         <>
 
-            <header className={`hero hero--bg_${imagen} h-auto`} >
-                <div className="bg-zinc-900 bg-opacity-70">
+            <header className="hero h-auto" >
+                <div className="bg-black bg-opacity-20">
                     <Navegacion />
-                    <div className="w-10/12 m-auto">
-                        <img className=" m-auto md:w-1/2 lg:w-2/5"  src="/images/logo_4.png" alt="..."/>
-                        <h2 className="text-center font-bold text-white text-2xl pb-16 md:text-3xl ">Discover the pleasure of staying well</h2>
-
+                    <div className="w-10/12 m-auto pb-20  lg:grid lg:grid-cols-5 lg:items-center">
+                        <h2 className="uppercase font-bold text-xl lg:text-4xl text-center text-white lg:col-span-2">Viaja por Colombia con la comodidad que mereces</h2>
+                        <img className=" m-auto w-1/3 lg:w-2/3 " src="/images/logo_4.png" alt="..." />
                     </div>
 
                 </div>

@@ -33,6 +33,7 @@ const propiedadSchema = new mongoose.Schema({
 
     direccion: {
         type: String,
+        unique: false,
     },
 
     descripcionBreve: {

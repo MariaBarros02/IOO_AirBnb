@@ -9,8 +9,8 @@ import { cargarMultiplesArchivos } from "../middlewares/upload.middleware.js";
 const router = Router();
 
 router.post("/agregarPropiedad", authRequired, verifyAdmin, cargarMultiplesArchivos , validateSchema(crearPropiedadSchema), crearPropiedad);
-router.get("/propiedades", authRequired, verifyAdmin, obtenerPropiedades);
-router.get("/propiedad/:id", authRequired, verifyAdmin, obtenerPropiedad);
+router.get("/propiedades", obtenerPropiedades);
+router.get("/propiedad/:id", obtenerPropiedad);
 router.put("/propiedad/:id", authRequired, verifyAdmin,  cargarMultiplesArchivos , actualizarPropiedad);
 router.delete("/propiedad/:id", authRequired, verifyAdmin, eliminarPropiedad);
 router.get("/propiedad/:id/cambiarVisibilidad", authRequired, verifyAdmin, cambiarVisibilidadProp);

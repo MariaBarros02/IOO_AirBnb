@@ -23,16 +23,16 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />}>
               <Route index element={<Home />} />
-              <Route path="/guests" element={<Guests />} />
-              <Route path="/propertyOwners" element={<PropertyOwners />} />
-              <Route path="/AboutUs" element={<AboutUs />} />
+              <Route path="/huespedes" element={<Guests />} />
+              <Route path="/paraSocios" element={<PropertyOwners />} />
+              <Route path="/nosotros" element={<AboutUs />} />
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
 
             </Route>
-            <Route path="/properties" element={<Index />}>
+            <Route path="/propiedades" element={<Index />}>
               <Route index element={<Properties />} />
-              <Route path="property/:idPropiedad" element={<Property />} />
+              <Route path="propiedad/:idPropiedad" element={<Property />} />
             </Route>
 
             <Route path="/admin" element={<PrivateRoute requiredRole="admin" />}>

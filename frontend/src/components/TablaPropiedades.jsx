@@ -60,7 +60,7 @@ const TablaPropiedades = () => {
 
     const { msg } = toast
     const cambiarVisibilidadPropiedad = async (id) => {
-        console.log(id)
+       
         try {
             const response = await axios.get(`http://localhost:5000/admin/propiedad/${id}/cambiarVisibilidad`, {
                 withCredentials: true,

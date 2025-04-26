@@ -1,9 +1,9 @@
 import { Card } from "flowbite-react"
 
-const CardFoto = ({ imagen, titulo, parrafo, clasesTitulo }) => {
+const CardFoto = ({ imagen, titulo, parrafo, clasesTitulo, link }) => {
     return (
         <>
-            <Card href="#"
+            <Card href={link}
                 className="max-w-lg mx-auto transform transition duration-300 hover:scale-110 hover:bg-white"
                 imgAlt="Meaningful alt text for an image that is not purely decorative"
                 imgSrc={imagen}

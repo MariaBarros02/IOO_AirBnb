@@ -1,29 +1,42 @@
 import HeaderPrincipal from "../layout/HeaderPrincipal";
-import Navegacion from "../layout/Navegacion";
 import Footer from "../layout/Footer";
 import CardFoto from "../components/CardFoto";
-import Space from "../components/Space";
 import { Button } from "flowbite-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-
+import { useState, useEffect } from "react";
+import axios from "axios";
 const Home = () => {
-  const { logout: useLogout } = useAuth();
+
+  const [propiedadesMostrar, setPropiedadesMostrar] = useState([]);
+
+  useEffect(() => {
+    cargarPropiedadesMostrar();
+  },[])
+
+  const cargarPropiedadesMostrar = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/admin/propiedades`)
+
+      const visibles = response.data.propiedades.filter(p => p.visibilidad === true).slice(-3)
+      setPropiedadesMostrar(visibles)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <>
-      <HeaderPrincipal imagen="3" />
+      <HeaderPrincipal  />
 
-      <section className="bg-zinc-200 py-10">
+      <section className=" py-10">
         <div className="w-10/12 m-auto grid grid-cols-1 justify-center items-center gap-5 lg:grid-cols-2">
-          <div className="">
-            <h2 className="uppercase  text-5xl font-bold  mb-5">
-              Here is your <span className="text-rose-600">next home </span>for
-              when you travel...
+          <div className="text-center lg:text-left ">
+            <h2 className="uppercase text-3xl md:text-5xl font-bold  mb-5">
+              Encuentra aquí tu <span className="text-cyan-700">próximo hogar </span>for
+              cuando viajes...
             </h2>
-            <p className="text-lg">
-              Our accommodations provide everything you need to rest and relax
-              because we have efficient Wi-Fi connections, water and electricity
-              services, customer support, clean and fresh spaces.
+            <p className="md:text-lg">
+            Nuestros alojamientos te ofrecen todo lo que necesitas para descansar y relajarte. Contamos con conexión Wi-Fi eficiente, servicios de agua y energía, atención al cliente, y espacios limpios y frescos pensados para tu comodidad.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-5">
@@ -35,35 +48,26 @@ const Home = () => {
         </div>
       </section>
 
-      <section className=" py-10">
+      {propiedadesMostrar.length > 2 ? (
+      <section className="bg-zinc-200 py-10">
         <div className="w-10/12 m-auto lg:w-11/12">
           <div className="my-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-5">
-            <CardFoto
-              imagen="/propiedades/id_1/4.jpg"
-              titulo="San Francisco, California: SoMa"
-              clasesTitulo="text-rose-600  text-xl"
-              parrafo="Our property offers strategic access to iconic sites like China Town,
-              Haight-Ashbury'sbohemian energy and Little Italy's fresh coffee
-              aroma."
-            />
-            <CardFoto
-              imagen="/propiedades/id_2/3.jpg"
-              titulo="San Francisco, California: Cozy & Complete"
-              clasesTitulo="text-cyan-600 text-xl"
-              parrafo="Discover the charm of San Francisco in our cozy apartment, ideally located near the
-              illuminated Bay Bridge and the dynamic SOMA district."
-            />
-            <CardFoto
-              imagen="/propiedades/id_3/5.jpg"
-              clasesTitulo="text-rose-600 text-xl"
-              titulo="San Francisco, California: Comfy Retreat"
-              parrafo="Just steps from local attractions and with easy access to transport, it's the ideal
-              starting point for exploring the city."
-            />
 
+            {propiedadesMostrar.map((propiedad,index) => (
+                <CardFoto
+                key={propiedad._id}
+                imagen={`http://localhost:5000${propiedad.imagenes[0]}`}
+                titulo={propiedad.titulo}
+                clasesTitulo={`${((index+1)%2 === 0 )? 'text-rose-600': 'text-cyan-600'} text-xl`}
+                parrafo={propiedad.descripcionBreve}
+                link ={`/propiedades/propiedad/${propiedad._id}`}
+
+              />
+            ))}
+            
             <div className="shadow-lg rounded-lg banner banner--bg_1 transform transition duration-300 hover:scale-110">
               <Link
-                to="/properties"
+                to="/propiedades"
                 className="w-full h-full flex justify-center  rounded-lg  items-center bg-white  bg-opacity-30 hover:bg-black hover:bg-opacity-40 "
               >
                 <svg
@@ -88,29 +92,28 @@ const Home = () => {
           </div>
         </div>
       </section>
-
+      ) : (<div></div>)}
       <section className="banner banner--bg_2 ">
         <div className="bg-zinc-900 bg-opacity-70 text-white py-20 flex flex-col justify-center items-center text-center">
-          <p className="text-xl lg:text-3xl font-bold uppercase w-8/12 m-auto ">
-            Have you liked any of our accommodations? We invite you to contact
-            us to rent your favorite one.
+          <p className="text-xl lg:text-4xl font-bold w-8/12 m-auto ">
+          ¿Te ha gustado alguno de nuestros alojamientos?
+          ¡Te invitamos a contactarnos para que puedas alquilar tu favorito!
           </p>
           <Button
-            className="mt-5 bg-zinc-950"
-            color="dark"
+            className="mt-5 font-bold"
             size="lg"
-            href="mailto:admin@marketoakconsult.com"
+            href="mailto:correo@tuempresa.com"
           >
-            CONTACT US
+            CONTÁCTANOS
           </Button>
         </div>
       </section>
 
       <section className="py-16 bg-zinc-200 ">
-        <h2 className="text-center uppercase text-3xl w-10/12 m-auto font-bold lg:text-5xl">
+        <h2 className="text-center uppercase text-3xl w-10/12 m-auto font-bold lg:text-4xl mb-4">
           {" "}
-          <span className="text-rose-600">Empower </span>Your{" "}
-          <span className="text-cyan-500">vacations</span> with us because
+          <span className="text-rose-600">Potencia </span>tus{" "}
+          <span className="text-cyan-600">vacaciones</span> con nosotros porque...
         </h2>
         <div className="w-9/12 m-auto grid grid-cols-1 gap-3 lg:grid-cols-3 lg:items-center text-center">
           <div className="my-3">
@@ -120,14 +123,13 @@ const Home = () => {
               alt="..."
             />
             <p className="text-md mt-3">
-              Our properties are designed to provide comfort for families and
-              groups. With ample space and top-notch amenities, you can relax
-              and enjoy your vacation to the fullest.
+            Nuestras propiedades están diseñadas para brindar comodidad a familias y grupos de amigos.
+            Con amplios espacios y comodidades de primer nivel, podrás relajarte y disfrutar al máximo de tus vacaciones.
             </p>
           </div>
           <div className="text-2xl font-semibold italic text-center mb-5 ">
             <p className="before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-rose-600 relative inline-block">
-              <span className="relative text-white text-6xl px-2">AND</span>
+              <span className="relative text-white text-6xl px-2">&</span>
             </p>
           </div>
           <div className="my-3">
@@ -137,9 +139,7 @@ const Home = () => {
               alt="..."
             />
             <p className=" text-md my-3">
-              Our dedicated team will assist you with any needs or questions you
-              may have in your stay, ensuring your stay is seamless and
-              enjoyable from start to finish.
+            Nuestro equipo está comprometido a asistirte con cualquier necesidad o inquietud durante tu estadía, asegurando que tu experiencia sea fluida y placentera de principio a fin.
             </p>
           </div>
         </div>
