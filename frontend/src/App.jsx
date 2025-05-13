@@ -10,6 +10,7 @@ import Register from "./paginas/Register";
 import Login from "./paginas/Login";
 import AdminPropiedad from "./paginas/AdminPropiedad";
 import Administracion from "./paginas/Administracion";
+import AdminReservas from "./paginas/AdminReservas";
 import PrivateRoute from "./components/PrivateRoutes";
 import { PropiedadProvider } from "./context/PropiedadContext";
 
@@ -39,6 +40,8 @@ function App() {
               <Route index element={<Administracion />} />
               <Route path="adminPropiedad" element={<AdminPropiedad />} />
               <Route path="adminPropiedad/:id" element={<AdminPropiedad />} />
+              <Route path="adminReservas" element={<AdminReservas />} />
+              <Route path="adminReservas/:id" element={<AdminReservas />} />
             </Route>
           </Routes>
         </BrowserRouter>

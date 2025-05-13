@@ -18,7 +18,7 @@ const Users = () => {
   const obtenerUsuarios = async (pagina = 1) => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/admin/usuarios?page=${pagina}&limit=10`,
+        `http://localhost:5000/api/usuarios?page=${pagina}&limit=10`,
         {
           withCredentials: true,
         }
