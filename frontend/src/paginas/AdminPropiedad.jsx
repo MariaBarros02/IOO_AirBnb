@@ -17,6 +17,21 @@ const AdminPropiedad = () => {
     const [openModal, setOpenModal] = useState(false);
     const [enviando, setEnviando] = useState(false);
     const [error, setError] = useState();
+    const [errores, setErrores] = useState({
+        titulo: '',
+        precioDia: '',
+        ciudad: '',
+        barrio: '',
+        direccion: '',
+        imagenes: '',
+        descripcionBreve: '',
+        descripcionCompleta: '',
+        habitaciones: '',
+        banos: '',
+        estacionamientos: '',
+        areaInmueble: '',
+        invitadosMax: ''
+    });
     const [datosFormulario, setDatosFormulario] = useState({
         titulo: '',
         precioDia: '',
@@ -82,6 +97,20 @@ const AdminPropiedad = () => {
 
     const handleChange = (e) => {
         const { id, value } = e.target;
+
+        //Evitar numeros negativos
+        const nuevosErrores = { ...errores };
+
+        if (['habitaciones', 'banos', 'estacionamientos', 'areaInmueble', 'invitadosMax'].includes(id)) {
+            if (parseInt(value) < 0) {
+                nuevosErrores[id] = 'Este valor no puede ser negativo';
+            } else {
+                nuevosErrores[id] = '';
+            }
+        }
+
+        setErrores(nuevosErrores);
+
         setDatosFormulario(prev => ({
             ...prev,
             [id]: value
@@ -107,10 +136,10 @@ const AdminPropiedad = () => {
         setImagenesExistentes(prev => {
             const nuevasImagenesExistentes = prev.filter((_, i) => i !== index);
             const nuevasImagenesEliminadas = [prev[index]];
-    
+
             // Actualiza el estado con las nuevas variables
             setImagenesEliminadas(prevEliminadas => [...prevEliminadas, ...nuevasImagenesEliminadas]);
-    
+
             return nuevasImagenesExistentes;
         });
     };
@@ -189,91 +218,152 @@ const AdminPropiedad = () => {
             }
         })
     }
+
+    const [touched, setTouched] = useState({
+        titulo: false,
+        precioDia: false,
+        ciudad: false,
+        barrio: false,
+        direccion: false,
+        descripcionBreve: false,
+        descripcionCompleta: false,
+        imagenes: false
+    }); // Nuevo estado para campos interactuados
+
+    // Validación al salir del campo (onBlur)
+    const handleBlur = (e) => {
+        const { id } = e.target;
+        setTouched(prev => ({ ...prev, [id]: true }));
+
+        // Validaciones específicas por campo
+        if (id === 'descripcionBreve' && datosFormulario.descripcionBreve.length < 50) {
+            setErrores(prev => ({ ...prev, [id]: 'Mínimo 50 caracteres' }));
+        }
+        else if (id === 'descripcionCompleta' && datosFormulario.descripcionCompleta.length < 100) {
+            setErrores(prev => ({ ...prev, [id]: 'Mínimo 100 caracteres' }));
+        }
+        else if (!datosFormulario[id]?.toString().trim()) {
+            setErrores(prev => ({ ...prev, [id]: 'Campo obligatorio' }));
+        } else {
+            setErrores(prev => ({ ...prev, [id]: '' }));
+        }
+    };
+
     // Manejar el envio
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setEnviando(true)
+        setEnviando(true);
+
+        // 1. Marcar todos los campos como tocados
+        setTouched(prev => Object.fromEntries(
+            Object.keys(prev).map(key => [key, true])
+        ));
+
+        // 2. Validaciones iniciales
+        const nuevosErrores = {};
+        let formularioValido = true;
+
+        // Campos requeridos
+        const camposRequeridos = ['titulo', 'precioDia', 'ciudad', 'barrio', 'direccion'];
+        camposRequeridos.forEach(campo => {
+            if (!datosFormulario[campo]?.toString().trim()) {
+                nuevosErrores[campo] = 'Este campo es obligatorio';
+                formularioValido = false;
+            }
+        });
+
+        // Validaciones de longitud
+        if (datosFormulario.descripcionBreve.length < 50) {
+            nuevosErrores.descripcionBreve = 'Mínimo 50 caracteres';
+            formularioValido = false;
+        }
+
+        if (datosFormulario.descripcionCompleta.length < 100) {
+            nuevosErrores.descripcionCompleta = 'Mínimo 100 caracteres';
+            formularioValido = false;
+        }
+
+        // Validación de imágenes
+        if ((!propiedad?._id && imagenes.length === 0) ||
+            (propiedad?._id && imagenes.length === 0 && imagenesExistentes.length === 0)) {
+            nuevosErrores.imagenes = 'Debe subir al menos una imagen';
+            formularioValido = false;
+        }
+
+        // Actualizar estados de error
+        setErrores(nuevosErrores);
+
+        // Si hay errores, detener el envío
+        if (!formularioValido) {
+            setEnviando(false);
+
+            // Scroll al primer error
+            const primerErrorKey = Object.keys(nuevosErrores).find(key => nuevosErrores[key]);
+            if (primerErrorKey) {
+                setTimeout(() => {
+                    const element = document.getElementById(primerErrorKey) ||
+                        document.getElementById('imagenes-container');
+                    element?.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }, 100);
+            }
+            return;
+        }
+
+        // 3. Envío al servidor (solo si todo es válido)
         try {
             const formData = new FormData();
+            // ... (resto de tu lógica de formData)
 
-            Object.entries(datosFormulario).forEach(([key, value]) => {
-                if (key !== 'inventario') {
-                    formData.append(key, value);
+            const response = await axios[propiedad?._id ? 'put' : 'post'](
+                propiedad?._id
+                    ? `http://localhost:5000/admin/propiedad/${propiedad._id}`
+                    : 'http://localhost:5000/admin/agregarPropiedad',
+                formData,
+                {
+                    withCredentials: true,
+                    headers: { 'Content-Type': 'multipart/form-data' }
                 }
-            });
+            );
 
-            const inventarioParaEnviar = {
-                habitaciones: datosFormulario.inventario.habitaciones || [],
-                bano: datosFormulario.inventario.bano || [],
-                cocina: datosFormulario.inventario.cocina || [],
-                entretenimiento: datosFormulario.inventario.entretenimiento || []
-            };
-
-            Object.entries(inventarioParaEnviar).forEach(([categoria, items]) => {
-                items.forEach((item, index) => {
-                    formData.append(`inventario[${categoria}][${index}][nombre]`, item.nombre);
-                    formData.append(`inventario[${categoria}][${index}][existencia]`, item.existencia);
-                });
-            });
-
-            if (propiedad?._id) {
-                // Enviar las imágenes existentes que queremos conservar
-                formData.append('imagenesExistentes', JSON.stringify(imagenesExistentes));
-                formData.append('imagenesEliminadas', JSON.stringify(imagenesEliminadas));
-            }
-
-            imagenes.forEach(img => {
-                formData.append('imagenes', img);
-            });
-
-            // Verificar que haya al menos una imagen
-            if ((!propiedad?._id && imagenes.length === 0) ||
-                (propiedad?._id && imagenes.length === 0 && imagenesExistentes.length === 0)) {
-                throw new Error('Debe subir al menos una imagen');
-            }
-
-            const url = propiedad?._id
-                ? `http://localhost:5000/admin/propiedad/${propiedad._id}`
-                : 'http://localhost:5000/admin/agregarPropiedad';
-
-            const method = propiedad?._id ? 'put' : 'post';
-
-
-            const response = await axios[method](url, formData, {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-
+            // Manejo de respuesta exitosa
             if (response.data) {
-                setOpenModal(true)
-
+                setOpenModal(true);
                 setTimeout(() => {
-                    setOpenModal(false)
+                    setOpenModal(false);
                     navigate('/admin', {
                         state: {
                             success: propiedad?._id
                                 ? 'Propiedad actualizada correctamente'
                                 : 'Propiedad creada correctamente'
                         }
-
                     });
                 }, 3000);
-
                 window.scrollTo(0, 0)
-
                 setPropiedad('');
             }
-
 
         } catch (error) {
             console.error('Error:', error);
             setError(error.response?.data?.message || error.message || 'Ocurrió un error');
         } finally {
-            setEnviando(false)
+            setEnviando(false);
         }
     };
+
+    <style jsx>{`
+        .input-error {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    `}</style>
 
     return (
         <>
@@ -315,13 +405,42 @@ const AdminPropiedad = () => {
                             <div className="mb-2 block">
                                 <Label htmlFor="titulo" className='text-base uppercase'>Titulo</Label>
                             </div>
-                            <TextInput id="titulo" type="text" placeholder="Titulo de la propiedad" onChange={handleChange} value={datosFormulario.titulo} required />
+                            <TextInput id="titulo"
+                                type="text"
+                                placeholder="Titulo de la propiedad"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={datosFormulario.titulo}
+                                color={touched.titulo && errores.titulo ? 'failure' : 'gray'}
+                                helperText={
+                                    touched.titulo && errores.titulo ? (
+                                        <span className="text-red-500 text-sm">
+                                            {errores.titulo}
+                                        </span>
+                                    ) : null
+                                }
+                            />
                         </div>
                         <div>
                             <div className="mb-2 block">
                                 <Label htmlFor="precioDia" className='text-base uppercase'>Precio (Día)</Label>
                             </div>
-                            <TextInput id="precioDia" type="text" placeholder="Precio de la propiedad (Día)" min='0' value={precioDiaFormateado} onChange={handlePrecioChange} required />
+                            <TextInput id="precioDia"
+                                type="text"
+                                placeholder="Precio de la propiedad (Día)"
+                                min='0'
+                                value={precioDiaFormateado}
+                                onChange={handlePrecioChange}
+                                onBlur={handleBlur}
+                                color={touched.precioDia && errores.precioDia ? 'failure' : 'gray'}
+                                helperText={
+                                    touched.precioDia && errores.precioDia ? (
+                                        <span className="text-red-500 text-sm">
+                                            {errores.precioDia}
+                                        </span>
+                                    ) : null
+                                }
+                            />
                         </div>
                         <div className='grid grid-cols-3 gap-2'>
                             <div className="mt-2 col-span-3 md:col-span-1 ">
@@ -339,13 +458,41 @@ const AdminPropiedad = () => {
                                 <div className="mb-2 block">
                                     <Label htmlFor="ciudad" className='text-base uppercase'>Ciudad</Label>
                                 </div>
-                                <TextInput id="ciudad" type="text" placeholder="Ciudad" value={datosFormulario.ciudad} onChange={handleChange} required />
+                                <TextInput id="ciudad"
+                                    type="text"
+                                    placeholder="Ciudad"
+                                    value={datosFormulario.ciudad}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    color={touched.ciudad && errores.ciudad ? 'failure' : 'gray'}
+                                    helperText={
+                                        touched.ciudad && errores.ciudad ? (
+                                            <span className="text-red-500 text-sm">
+                                                {errores.ciudad}
+                                            </span>
+                                        ) : null
+                                    }
+                                />
                             </div>
                             <div className='my-2 col-span-3 md:col-span-1'>
                                 <div className="mb-2 block">
                                     <Label htmlFor="barrio" className='text-base uppercase'>Barrio</Label>
                                 </div>
-                                <TextInput id="barrio" type="text" placeholder="Barrio" value={datosFormulario.barrio} onChange={handleChange} required />
+                                <TextInput id="barrio"
+                                    type="text"
+                                    placeholder="Barrio"
+                                    value={datosFormulario.barrio}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    color={touched.barrio && errores.barrio ? 'failure' : 'gray'}
+                                    helperText={
+                                        touched.barrio && errores.barrio ? (
+                                            <span className="text-red-500 text-sm">
+                                                {errores.barrio}
+                                            </span>
+                                        ) : null
+                                    }
+                                />
                             </div>
 
                         </div>
@@ -354,9 +501,23 @@ const AdminPropiedad = () => {
                             <div className="mb-2 block">
                                 <Label htmlFor="direccion" className='text-base uppercase'>Dirección</Label>
                             </div>
-                            <TextInput id="direccion" type="text" placeholder="Dirección de la propiedad" value={datosFormulario.direccion} onChange={handleChange} />
+                            <TextInput id="direccion"
+                                type="text"
+                                placeholder="Dirección de la propiedad"
+                                value={datosFormulario.direccion}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                color={touched.direccion && errores.direccion ? 'failure' : 'gray'}
+                                helperText={
+                                    touched.direccion && errores.direccion ? (
+                                        <span className="text-red-500 text-sm">
+                                            {errores.direccion}
+                                        </span>
+                                    ) : null
+                                }
+                            />
                         </div>
-                        <div className="my-2">
+                        <div className={`my-2 ${touched.imagenes && errores.imagenes ? 'border-2 border-red-500 p-4 rounded-lg' : ''}`} >
                             <Label className="mb-2 block uppercase text-base" htmlFor="imagenes">
                                 Imágenes
                             </Label>
@@ -409,8 +570,17 @@ const AdminPropiedad = () => {
                                     </div>
                                 </div>
                             )}
-                            <FileInput id="imagenes" multiple accept='image/*' onChange={handleFileChange} />
-                            <HelperText className="mt-1">Seleccione las fotografias de su propiedad </HelperText>
+                            <FileInput id="imagenes" multiple accept='image/*' 
+                            onChange={(e) => {
+                                handleFileChange(e);
+                                setErrores(prev => ({ ...prev, imagenes: '' }));}} 
+                            className={`mt-2 ${touched.imagenes && errores.imagenes ? 'border-red-500' : ''}`} 
+                            />
+                            {touched.imagenes && errores.imagenes ? (
+                                <p className="mt-2 text-sm text-red-600 animate-pulse">
+                                    {errores.imagenes}
+                                </p>
+                            ) : (<HelperText className="mt-1">Seleccione las fotografias de su propiedad </HelperText>)}
                         </div>
                         <div className='my-2'>
                             <div className="mb-2 block">
@@ -419,12 +589,21 @@ const AdminPropiedad = () => {
                             <Textarea
                                 id="descripcionBreve"
                                 placeholder="Descripción breve de la propiedad"
-                                required
                                 rows={3} // Puedes cambiar el número de líneas
                                 maxLength={350}
-                                className="text-base"
+                                className={touched.descripcionBreve && errores.descripcionBreve ? 'text-base border-red-500' : 'text-base'}
                                 value={datosFormulario.descripcionBreve}
                                 onChange={handleChange}
+                                onBlur={handleBlur}
+                                helperText={
+                                    touched.descripcionBreve && errores.descripcionBreve ? (
+                                        <span className="text-red-500 text-sm">
+                                            {errores.descripcionBreve}
+                                        </span>
+                                    ) : (
+                                        <HelperText>Mínimo 50 caracteres</HelperText>
+                                    )
+                                }
                             />
                         </div>
 
@@ -435,12 +614,21 @@ const AdminPropiedad = () => {
                             <Textarea
                                 id="descripcionCompleta"
                                 placeholder="Descripción breve de la propiedad"
-                                required
                                 rows={6} // Puedes cambiar el número de líneas
                                 maxLength={650}
-                                className="text-base"
+                                className={touched.descripcionCompleta && errores.descripcionCompleta ? 'text-base border-red-500' : 'text-base'}
                                 value={datosFormulario.descripcionCompleta}
                                 onChange={handleChange}
+                                onBlur={handleBlur}
+                                helperText={
+                                    touched.descripcionCompleta && errores.descripcionCompleta ? (
+                                        <span className="text-red-500 text-sm">
+                                            {errores.descripcionCompleta}
+                                        </span>
+                                    ) : (
+                                        <HelperText>Mínimo 50 caracteres</HelperText>
+                                    )
+                                }
                             />
                         </div>
 
@@ -469,8 +657,17 @@ const AdminPropiedad = () => {
                                         min="0"
                                         value={field.value}
                                         onChange={handleChange}
+                                        color={errores[field.id] ? 'failure' : 'gray'}
+
                                         required
                                     />
+                                    <div className="relative min-h-[20px] mt-1">
+                                        {errores[field.id] && (
+                                            <p className="absolute text-red-500 text-xs">
+                                                {errores[field.id]}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -496,8 +693,8 @@ const AdminPropiedad = () => {
                                 {CATEGORIAS_INVENTARIO.map(categoria => (
                                     <option key={categoria} value={categoria} className='normal-case'>
                                         {categoria === 'bano'
-                                        ? 'Baño' // Solución directa para este caso específico
-                                        : categoria === 'entretenimiento'? 'Entretenimiento y ocio' : categoria.charAt(0).toUpperCase() + categoria.slice(1)}
+                                            ? 'Baño' // Solución directa para este caso específico
+                                            : categoria === 'entretenimiento' ? 'Entretenimiento y ocio' : categoria.charAt(0).toUpperCase() + categoria.slice(1)}
                                     </option>
                                 ))}
                             </Select>
@@ -528,7 +725,7 @@ const AdminPropiedad = () => {
                                 <h3 className="text-lg font-semibold mb-2">
                                     {categoria === 'bano'
                                         ? 'Baño'
-                                        : categoria === 'entretenimiento'? 'Entretenimiento y ocio' : categoria.charAt(0).toUpperCase() + categoria.slice(1)}
+                                        : categoria === 'entretenimiento' ? 'Entretenimiento y ocio' : categoria.charAt(0).toUpperCase() + categoria.slice(1)}
                                 </h3>
                                 {datosFormulario.inventario[categoria]?.length > 0 ? (
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
