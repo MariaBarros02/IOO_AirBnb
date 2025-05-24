@@ -42,8 +42,25 @@ export const crearReserva = async (req, res) => {
 // Obtener todas las reservas
 export const obtenerReservas = async (req, res) => {
   try {
-    const reservas = await Reserva.find().populate('property');
-    res.json(reservas);
+    const pagina = parseInt(req.query.page) || 1;
+    const limite = parseInt(req.query.limit) || 10; // Default limit a 10 si no se provee
+    const skip = (pagina - 1) * limite;
+
+    const totalReservas = await Reserva.countDocuments();
+    const paginasTotales = Math.ceil(totalReservas / limite);
+
+    const reservas = await Reserva.find()
+      .populate('property')
+      .sort({ createdAt: -1 }) // Opcional: ordenar por fecha de creación
+      .skip(skip)
+      .limit(limite);
+
+    res.json({
+      reservas,
+      paginaActual: pagina,
+      paginasTotales,
+      totalReservas
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -64,15 +81,39 @@ export const obtenerReserva = async (req, res) => {
 // Actualizar una reserva
 export const actualizarReserva = async (req, res) => {
   try {
-    const { status } = req.body;
+    const { name, lastName, phone, email, property, checkIn, checkOut, estado } = req.body;
+
+    if (property) {
+      const propiedadExiste = await Propiedad.findById(property);
+      if (!propiedadExiste) {
+        return res.status(404).json({ message: "La propiedad especificada no existe" });
+      }
+    }
+
+    const datosAActualizar = {
+      name,
+      lastName,
+      phone,
+      email,
+      property,
+      checkIn: checkIn ? new Date(checkIn) : undefined,
+      checkOut: checkOut ? new Date(checkOut) : undefined,
+      status: estado // Asegúrate que el frontend envíe 'estado' y no 'status'
+    };
+
+    // Eliminar campos undefined para no sobrescribir con nada si no vienen en el request
+    Object.keys(datosAActualizar).forEach(key => datosAActualizar[key] === undefined && delete datosAActualizar[key]);
+
     const reservaActualizada = await Reserva.findByIdAndUpdate(
       req.params.id,
-      { status },
-      { new: true }
+      datosAActualizar,
+      { new: true, runValidators: true } // runValidators para asegurar que los datos actualizados cumplen el schema
     );
+
     if (!reservaActualizada) return res.status(404).json(["Reserva no encontrada"]);
     res.json(reservaActualizada);
   } catch (error) {
+    console.error('Error al actualizar reserva:', error); // Para debugging
     res.status(500).json({ message: error.message });
   }
 };
@@ -107,7 +148,7 @@ export const obtenerFechasOcupadas = async (req, res) => {
     const { propertyId } = req.params;
     const reservas = await Reserva.find({
       property: propertyId,
-      status: { $in: ['pendiente', 'confirmada'] }
+      status: { $in: ['pendiente', 'confirmada', 'Confirmada'] }
     }, 'checkIn checkOut');
     res.json(reservas);
   } catch (error) {

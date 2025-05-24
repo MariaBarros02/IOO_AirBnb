@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Label, TextInput, Select } from 'flowbite-react';
+import { Button, Label, TextInput, Select, Modal, ModalBody } from 'flowbite-react';
+import { HiCheckCircle } from 'react-icons/hi';
 import HeaderAdministrador from '../layout/HeaderAdministrador';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -44,6 +45,7 @@ const AdminReservas = () => {
   const [mensajePropiedad, setMensajePropiedad] = useState('');
   const [mensajeFecha, setMensajeFecha] = useState('');
   const [telefonoInvalido, setTelefonoInvalido] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const messages = {
     date: 'Fecha',
@@ -65,6 +67,7 @@ const AdminReservas = () => {
   };
 
   useEffect(() => {
+    // Cargar propiedades al montar el componente
     const obtenerPropiedades = async () => {
       try {
         const response = await axios.get('http://localhost:5000/admin/propiedades', {
@@ -180,11 +183,15 @@ const AdminReservas = () => {
       if (id) {
         // Editar reserva existente
         await axios.put(`http://localhost:5000/admin/reservas/${id}`, datosFormateados, { withCredentials: true });
-        navigate('/admin', {
-          state: {
-            success: 'Reserva actualizada correctamente'
-          }
-        });
+        setOpenModal(true);
+        setTimeout(() => {
+          setOpenModal(false);
+          navigate('/admin', {
+            state: {
+              success: 'Reserva actualizada correctamente'
+            }
+          });
+        }, 3000);
       } else {
         // Crear nueva reserva
         await axios.post('http://localhost:5000/admin/reservas', datosFormateados, {
@@ -193,11 +200,15 @@ const AdminReservas = () => {
             'Content-Type': 'application/json'
           }
         });
-        navigate('/admin', {
-          state: {
-            success: 'Reserva creada correctamente'
-          }
-        });
+        setOpenModal(true);
+        setTimeout(() => {
+          setOpenModal(false);
+          navigate('/admin', {
+            state: {
+              success: id ? 'Reserva actualizada correctamente' : 'Reserva creada correctamente'
+            }
+          });
+        }, 3000);
       }
     } catch (error) {
       setError(error.response?.data?.message || 'Error al crear la reserva. Por favor, verifique los datos ingresados.');
@@ -231,19 +242,77 @@ const AdminReservas = () => {
   };
 
   useEffect(() => {
-    if (datosFormulario.propiedadId) {
-      axios.get(`http://localhost:5000/admin/reservas/ocupadas/${datosFormulario.propiedadId}`)
+    if (id && propiedades.length > 0) {
+      axios.get(`http://localhost:5000/admin/reservas/${id}`, { withCredentials: true })
         .then(res => {
-          // Transforma las reservas a eventos para el calendario
-          const eventos = res.data.map(r => ({
+          const reserva = res.data;
+          // Separar el nombre completo en primer y segundo nombre
+          const nombres = reserva.name.split(' ');
+          const primerNombre = nombres[0] || '';
+          const segundoNombre = nombres.slice(1).join(' ') || '';
+
+          // Separar el apellido completo en primer y segundo apellido
+          const apellidos = reserva.lastName.split(' ');
+          const primerApellido = apellidos[0] || '';
+          const segundoApellido = apellidos.slice(1).join(' ') || '';
+
+          // Formatear las fechas para el input type="date"
+          const fechaDesde = new Date(reserva.checkIn).toISOString().split('T')[0];
+          const fechaHasta = new Date(reserva.checkOut).toISOString().split('T')[0];
+
+          setDatosFormulario({
+            primerNombre,
+            segundoNombre,
+            primerApellido,
+            segundoApellido,
+            telefono: reserva.phone.toString(),
+            email: reserva.email,
+            propiedadId: typeof reserva.property === 'object' ? reserva.property._id : reserva.property,
+            propiedad: '',
+            fechaDesde,
+            fechaHasta
+          });
+        })
+        .catch(err => {
+          console.error('Error al cargar la reserva:', err);
+          setError('Error al cargar los datos de la reserva');
+        });
+    }
+  }, [id, propiedades]);
+
+  useEffect(() => {
+    if (datosFormulario.propiedadId && propiedades.length > 0) {
+      const propiedadEncontrada = propiedades.find(p => p._id === datosFormulario.propiedadId);
+      if (propiedadEncontrada) {
+        setDatosFormulario(prev => ({
+          ...prev,
+          propiedad: propiedadEncontrada.titulo
+        }));
+      }
+    }
+  }, [propiedades, datosFormulario.propiedadId]);
+
+  useEffect(() => {
+    if (datosFormulario.propiedadId) {
+      const propiedadId = typeof datosFormulario.propiedadId === 'object' ? datosFormulario.propiedadId._id : datosFormulario.propiedadId;
+      console.log('Fetching reservations for property ID:', propiedadId);
+      axios.get(`http://localhost:5000/admin/reservas/ocupadas/${propiedadId}`)
+        .then(res => {
+          console.log('API response for reservations:', res.data);
+          const eventosTransformados = res.data.map(r => ({
             title: 'Reservado',
-            start: parseISO(r.checkIn),
-            end: parseISO(r.checkOut),
+            start: parseISO(r.checkIn), 
+            end: parseISO(r.checkOut),   
             allDay: true,
           }));
-          setEventos(eventos);
+          setEventos(eventosTransformados);
         })
-        .catch(() => setEventos([]));
+        .catch(err => {
+          console.error('Error fetching reservations:', err);
+          setEventos([]);
+        });
+    } else {
+      setEventos([]);
     }
   }, [datosFormulario.propiedadId]);
 
@@ -278,53 +347,24 @@ const AdminReservas = () => {
     if (view === 'month') {
       const fecha = date.toISOString().split('T')[0];
       if (fechasOcupadasArray.includes(fecha)) {
-        return 'bg-red-300 text-white'; // Usa tu clase de color preferida o define una en tu CSS
+        return 'bg-red-300 text-white'; 
       }
     }
     return null;
   };
 
-  useEffect(() => {
-    if (id) {
-      // Llama al backend para obtener la reserva por id
-      axios.get(`http://localhost:5000/admin/reservas/${id}`, { withCredentials: true })
-        .then(res => {
-          const reserva = res.data;
-          // Separar el nombre completo en primer y segundo nombre
-          const nombres = reserva.name.split(' ');
-          const primerNombre = nombres[0] || '';
-          const segundoNombre = nombres.slice(1).join(' ') || '';
-
-          // Separar el apellido completo en primer y segundo apellido
-          const apellidos = reserva.lastName.split(' ');
-          const primerApellido = apellidos[0] || '';
-          const segundoApellido = apellidos.slice(1).join(' ') || '';
-
-          // Formatear las fechas para el input type="date"
-          const fechaDesde = new Date(reserva.checkIn).toISOString().split('T')[0];
-          const fechaHasta = new Date(reserva.checkOut).toISOString().split('T')[0];
-
-          setDatosFormulario({
-            primerNombre,
-            segundoNombre,
-            primerApellido,
-            segundoApellido,
-            telefono: reserva.phone.toString(),
-            email: reserva.email,
-            propiedadId: reserva.property,
-            fechaDesde,
-            fechaHasta
-          });
-        })
-        .catch(err => {
-          console.error('Error al cargar la reserva:', err);
-          setError('Error al cargar los datos de la reserva');
-        });
-    }
-  }, [id]);
-
   return (
     <>
+      <Modal show={openModal} onClose={() => setOpenModal(false)} popup>
+        <ModalBody>
+          <div className="text-center pt-10">
+            <HiCheckCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-800">
+              La reserva se ha guardado correctamente.
+            </h3>
+          </div>
+        </ModalBody>
+      </Modal>
       <HeaderAdministrador />
       <div className='w-11/12 m-auto mt-10'>
         <div className='flex items-center gap-5'>

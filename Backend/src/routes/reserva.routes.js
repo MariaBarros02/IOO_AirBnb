@@ -7,7 +7,6 @@ import { crearReservaSchema } from "../schemas/reserva.schema.js";
 
 const router = Router();
 
-// Rutas de reservas
 router.post("/reservas", authRequired, verifyAdmin, validateSchema(crearReservaSchema), crearReserva);
 router.get("/reservas", authRequired, verifyAdmin, obtenerReservas);
 router.get("/reservas/:id", authRequired, verifyAdmin, obtenerReserva);

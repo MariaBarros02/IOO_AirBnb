@@ -92,13 +92,13 @@ const Users = () => {
   return (
     <section className="py-6 px-10">
       {/* Header con botón de logout */}
-      <div className="w:10/12 md:w-9/12 mx-auto mb-6">
+      <div className="max-w-7xl mx-auto mb-6 flex justify-between items-center">
         <h1 className="text-4xl font-bold uppercase">Usuarios</h1>
 
       </div>
 
       {/* Tabla de usuarios */}
-      <div className="overflow-x-auto rounded-lg shadow-lg max-w-5xl mx-auto">
+      <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto items-start rounded-lg shadow-lg max-w-5xl">
         <table className="w-full text-sm bg-white dark:bg-gray-800">
           <thead className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
             <tr>
@@ -140,25 +140,27 @@ const Users = () => {
       </div>
 
       {/* Paginación */}
-      <div className="flex justify-around items-center mt-6">
-        <Button
-          className="ml-5"
-          onClick={() => setPaginaActual((prev) => Math.max(1, prev - 1))}
-          disabled={paginaActual === 1}
-        >
-          Anterior
-        </Button>
-        <span>
+      <div className="max-w-7xl mx-auto mt-6 grid grid-cols-3 items-center">
+        <div>
+          <Button
+            className="ml-0"
+            onClick={() => setPaginaActual((prev) => Math.max(1, prev - 1))}
+            disabled={paginaActual === 1}
+          >
+            Anterior
+          </Button>
+        </div>
+        <div className="text-center">
           Página {paginaActual} de {totalPaginas}
-        </span>
-        <Button
-          onClick={() =>
-            setPaginaActual((prev) => Math.min(totalPaginas, prev + 1))
-          }
-          disabled={paginaActual === totalPaginas}
-        >
-          Siguiente
-        </Button>
+        </div>
+        <div className="flex justify-end">
+          <Button
+            onClick={() => setPaginaActual((prev) => Math.min(totalPaginas, prev + 1))}
+            disabled={paginaActual === totalPaginas}
+          >
+            Siguiente
+          </Button>
+        </div>
       </div>
 
       {/* Modal de edición */}

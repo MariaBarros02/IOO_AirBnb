@@ -23,13 +23,13 @@ const TablaPropiedades = () => {
 
     const [toast, setToast] = useState({});
     useEffect(() => {
-        cargarPropiedades();
-    }, []);
+        cargarPropiedades(paginaActual);
+    }, [paginaActual]);
 
 
     const cargarPropiedades = async (pagina = 1) => {
         try {
-            const response = await axios.get(`http://localhost:5000/admin/propiedades?page=${pagina}&limit=10`, {
+            const response = await axios.get(`http://localhost:5000/admin/propiedades?page=${pagina}&limit=5`, {
                 withCredentials: true,
             })
      
@@ -49,7 +49,7 @@ const TablaPropiedades = () => {
             })
             setOpenModalEliminar(false);
             cargarPropiedades();
-            setToast({ msg: "Se eliminado la propiedad correctamente" })
+            setToast({ msg: "Se ha eliminado la propiedad correctamente" })
             setTimeout(() => {
                 setToast('')
             }, 5000);
@@ -81,21 +81,16 @@ const TablaPropiedades = () => {
 
         <section className="py-10 px-10">
             {msg && <Notificacion notificacion={toast} />}
-            <div className=" w:10/12 md:w-9/12 mx-auto mb-6">
-                <div className='flex justify-between items-center'>
+            <div className=" max-w-7xl mx-auto mb-6 flex justify-between items-center">
                     <h1 className="text-4xl font-bold uppercase">Propiedades</h1>
-                    <Link className='bg-lime-600 p-2 text-white rounded-lg text-center  text-xs  hover:bg-lime-700' to="/admin/adminPropiedad" >
+                    <Link className='bg-lime-600 p-2 text-white rounded-lg text-center text-xs hover:bg-lime-700' to="/admin/adminPropiedad" >
                         Agregar Propiedad
                     </Link>
-
-                </div>
-
-
             </div>
 
 
             {/* Tabla de propiedades */}
-            <div className="overflow-x-auto rounded-lg shadow-lg max-w-5xl mx-auto">
+            <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto items-start rounded-lg shadow-lg max-w-5xl">
                 <table className="w-full text-sm bg-white dark:bg-gray-800">
                     <thead className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                         <tr>
@@ -193,25 +188,27 @@ const TablaPropiedades = () => {
             </div>
 
             {/* Paginación */}
-            <div className="flex justify-around items-center mt-6">
-                <Button
-                    className="ml-5"
-                    onClick={() => setPaginaActual((prev) => Math.max(1, prev - 1))}
-                    disabled={ paginaActual === 1}
-                >
-                    Anterior
-                </Button>
-                <span>
+            <div className="max-w-7xl mx-auto mt-6 grid grid-cols-3 items-center">
+                <div>
+                    <Button
+                        className="ml-0"
+                        onClick={() => setPaginaActual((prev) => Math.max(1, prev - 1))}
+                        disabled={paginaActual === 1}
+                    >
+                        Anterior
+                    </Button>
+                </div>
+                <div className="text-center">
                     Página {paginaActual} de {totalPaginas}
-                </span>
-                <Button
-                    onClick={() =>
-                        setPaginaActual((prev) => Math.min(totalPaginas, prev + 1))
-                    }
-                    disabled={paginaActual === totalPaginas}
-                >
-                    Siguiente
-                </Button>
+                </div>
+                <div className="flex justify-end">
+                    <Button
+                        onClick={() => setPaginaActual((prev) => Math.min(totalPaginas, prev + 1))}
+                        disabled={paginaActual === totalPaginas}
+                    >
+                        Siguiente
+                    </Button>
+                </div>
             </div>
 
         </section>
