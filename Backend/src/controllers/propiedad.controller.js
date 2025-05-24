@@ -93,19 +93,59 @@ export const obtenerPropiedad = async (req, res) => {
 export const actualizarPropiedad = async (req, res) => {
     try {
         const { id } = req.params;
-        const imagenesExistentes = JSON.parse(req.body.imagenesExistentes || [] );
+
+        // Parsear datos del cuerpo de la solicitud
+        const {
+            titulo,
+            precioDia,
+            ciudad,
+            barrio,
+            direccion,
+            tipoInmueble,
+            descripcionBreve,
+            descripcionCompleta,
+            habitaciones,
+            banos,
+            estacionamientos,
+            areaInmueble,
+            invitadosMax,
+            inventario: inventarioString, // Viene como string JSON
+            imagenesExistentes: imagenesExistentesString,
+            imagenesEliminadas: imagenesEliminadasString
+        } = req.body;
+
+        // Parsear los datos que vienen como strings JSON
+        const imagenesExistentes = JSON.parse(imagenesExistentesString || '[]');
+        const imagenesEliminadas = JSON.parse(imagenesEliminadasString || '[]');
+        const inventario = JSON.parse(inventarioString || '{}');
+
+        // Procesar nuevas imágenes subidas
         const nuevasImagenes = req.files?.map(file => `/uploads/${file.filename}`) || [];
-        const imagenesEliminadas = JSON.parse(req.body.imagenesEliminadas || [] )
-        
+
         // Combinar imágenes existentes (que no se borraron) con las nuevas
         const todasLasImagenes = [...imagenesExistentes, ...nuevasImagenes];
-    
+
+        // Actualizar la propiedad en la base de datos
         await Propiedad.findByIdAndUpdate(id, {
-            ...req.body,
+            titulo,
+            precioDia,
+            ciudad,
+            barrio,
+            direccion,
+            tipoInmueble,
+            descripcionBreve,
+            descripcionCompleta,
+            habitaciones,
+            banos,
+            estacionamientos,
+            areaInmueble,
+            invitadosMax,
+            inventario, // Aquí pasamos el objeto parseado
             imagenes: todasLasImagenes
         });
-    
-        if (imagenesEliminadas) {
+
+        // Eliminar imágenes del servidor si se marcaron para borrar
+        if (imagenesEliminadas.length > 0) {
             imagenesEliminadas.forEach(imagen => {
                 const imagePath = path.join(__directorioArchivo, '../public', imagen);
                 if (fs.existsSync(imagePath)) {
@@ -117,9 +157,14 @@ export const actualizarPropiedad = async (req, res) => {
         res.json({ success: true });
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        console.error('Error al actualizar propiedad:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al actualizar la propiedad',
+            error: error.message
+        });
     }
-}
+};
 
 export const eliminarPropiedad = async (req, res) => {
     try {

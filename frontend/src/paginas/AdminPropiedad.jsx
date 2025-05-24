@@ -315,7 +315,40 @@ const AdminPropiedad = () => {
         // 3. Envío al servidor (solo si todo es válido)
         try {
             const formData = new FormData();
-            // ... (resto de tu lógica de formData)
+
+            // Agregar campos básicos
+            formData.append('titulo', datosFormulario.titulo);
+            formData.append('precioDia', datosFormulario.precioDia);
+            formData.append('ciudad', datosFormulario.ciudad);
+            formData.append('barrio', datosFormulario.barrio);
+            formData.append('direccion', datosFormulario.direccion);
+            formData.append('tipoInmueble', datosFormulario.tipoInmueble);
+            formData.append('descripcionBreve', datosFormulario.descripcionBreve);
+            formData.append('descripcionCompleta', datosFormulario.descripcionCompleta);
+            formData.append('habitaciones', datosFormulario.habitaciones);
+            formData.append('banos', datosFormulario.banos);
+            formData.append('estacionamientos', datosFormulario.estacionamientos);
+            formData.append('areaInmueble', datosFormulario.areaInmueble);
+            formData.append('invitadosMax', datosFormulario.invitadosMax);
+
+            // Agregar inventario como JSON
+            formData.append('inventario', JSON.stringify(datosFormulario.inventario));
+
+            // Agregar imágenes existentes (como JSON)
+            formData.append('imagenesExistentes', JSON.stringify(imagenesExistentes));
+
+
+            // Agregar imágenes nuevas
+            imagenes.forEach((imagen) => {
+                formData.append('imagenes', imagen);
+            });
+
+            // Agregar imágenes eliminadas (si estás actualizando)
+            if (propiedad?._id && imagenesEliminadas.length > 0) {
+                formData.append('imagenesEliminadas', JSON.stringify(imagenesEliminadas));
+            }
+
+            console.log([...formData.entries()]); // Para depuración
 
             const response = await axios[propiedad?._id ? 'put' : 'post'](
                 propiedad?._id
@@ -570,11 +603,12 @@ const AdminPropiedad = () => {
                                     </div>
                                 </div>
                             )}
-                            <FileInput id="imagenes" multiple accept='image/*' 
-                            onChange={(e) => {
-                                handleFileChange(e);
-                                setErrores(prev => ({ ...prev, imagenes: '' }));}} 
-                            className={`mt-2 ${touched.imagenes && errores.imagenes ? 'border-red-500' : ''}`} 
+                            <FileInput id="imagenes" multiple accept='image/*'
+                                onChange={(e) => {
+                                    handleFileChange(e);
+                                    setErrores(prev => ({ ...prev, imagenes: '' }));
+                                }}
+                                className={`mt-2 ${touched.imagenes && errores.imagenes ? 'border-red-500' : ''}`}
                             />
                             {touched.imagenes && errores.imagenes ? (
                                 <p className="mt-2 text-sm text-red-600 animate-pulse">
