@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import propiedades from "../data/propiedades";
+import MapByAddress from "../components/MapByAddress";
 import HeaderPrincipal from "../layout/HeaderPrincipal";
 import Footer from "../layout/Footer"
 import { Carousel, Button, Timeline, Breadcrumb } from "flowbite-react";
@@ -12,9 +12,11 @@ const Property = () => {
   const { idPropiedad } = useParams();
 
   const [propiedad, setPropiedad] = useState();
+  const [inventario, setInventario] = useState();
 
   useEffect(() => {
     cargarPropiedad();
+
   }, []);
 
 
@@ -24,7 +26,9 @@ const Property = () => {
         withCredentials: true,
       })
       setPropiedad(response.data);
+      setInventario(response.data.inventario)
 
+      console.log(response.data.inventario)
     } catch (error) {
       console.log(error)
     }
@@ -43,7 +47,7 @@ const Property = () => {
             <Breadcrumb.Item href="/" icon={HiHome}>
               Inicio
             </Breadcrumb.Item>
-            <Breadcrumb.Item href="/properties">Propiedades</Breadcrumb.Item>
+            <Breadcrumb.Item href="/propiedades">Propiedades</Breadcrumb.Item>
             <Breadcrumb.Item>{propiedad.titulo}</Breadcrumb.Item>
           </Breadcrumb>
           <h2 className="text-2xl md:text-5xl font-bold mb-5">{propiedad.titulo}</h2>
@@ -64,26 +68,15 @@ const Property = () => {
 
 
               <Button className="w-full my-5 uppercase font-bold tracking-widest block" outline gradientDuoTone="cyanToBlue" size="xl" href="#" target="_blank">
-                Contact us to check availability!
+                Contáctanos para consultar disponibilidad
               </Button>
 
-              <section className="w-10/12  text-sm m-auto lg:mt-10 lg:flex lg:justify-between">
-                <img className="w-1/4  m-auto my-5" src=" /images/beyond.png" alt="beyond-logo" />
-                <p className="text-center font-bold tracking-wider text-xs lg:w-2/3">
-                  MARKETOAK CONSULTING LLC is an partner of the Beyond Corporate Housing Network.
-                  Beyond CHN is a distinguished nationwide corporate housing network
-                  for individual companies specializing in midterm stays.
-                </p>
-              </section>
+
             </div>
 
             <div className="bg-white p-5 shadow-xl lg:mt-0 rounded-md lg:col-span-2 ">
-              <p className="text-xl">Welcome to your gateway to <span className="text-cyan-600">San
-                Francisco's</span> cultural diversity in SoMa Distric!</p>
-              <iframe className="w-full rounded-md my-3 h-60"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25227.38069460778!2d-122.42865942614189!3d37.780135176332664!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80858083a662307b%3A0xfd99010c2dc1f950!2sSoMa%2C%20San%20Francisco%2C%20California%2C%20EE.%20UU.!5e0!3m2!1ses-419!2sco!4v1720104557173!5m2!1ses-419!2sco"
-                allowFullScreen="" referrerPolicy="no-referrer-when-downgrade">
-              </iframe>
+              <p className="text-xl  ">!Bienvenido a tu escapada cultural en <span className="text-cyan-600">{propiedad.ciudad}</span> en {propiedad.barrio}!</p>
+              <MapByAddress city={propiedad.ciudad} neighborhood={propiedad.barrio} />
               <p >{propiedad.descripcionCompleta}</p>
             </div>
           </div>
@@ -91,15 +84,21 @@ const Property = () => {
       </section>
       <section className=" py-10">
         <div className="w-10/12 m-auto">
-          <p className="text-4xl font-bold my-5">During this stay, you will <span className="text-cyan-600"> be able to</span> enjoy...</p>
+          <p className="text-4xl font-bold my-5">Durante tu estancia, <span className="text-cyan-600"> podrás disfrutar</span> de...</p>
           <Timeline horizontal >
             <Timeline.Item>
               <Timeline.Point />
               <Timeline.Content>
-                <Timeline.Time className="text-zinc-700">Living Room</Timeline.Time>
-                <Timeline.Title className=" font-bold text-xl">The living room is a great place to enjoy fun and memorable moments after a busy day or outing.</Timeline.Title>
+                <Timeline.Time className="text-zinc-700">Sala</Timeline.Time>
+                <Timeline.Title className=" font-bold text-xl">Tendrás un excelente lugar para disfrutar de momentos divertidos e inolvidables después de un día ajetreado o una salida.</Timeline.Title>
                 <Timeline.Body className="text-zinc-700" >
-                  
+
+                  <p>
+                    {inventario.entretenimiento
+                      .filter(e => e.existencia)
+                      .map(e => e.nombre)
+                      .join(", ")}
+                  </p>
                 </Timeline.Body>
 
               </Timeline.Content>
@@ -107,30 +106,45 @@ const Property = () => {
             <Timeline.Item>
               <Timeline.Point />
               <Timeline.Content>
-                <Timeline.Time className="text-zinc-700">Bedroom</Timeline.Time>
-                <Timeline.Title>Rest in one of these comfortable rooms, carefully designed and furnished to provide everything you need</Timeline.Title>
+                <Timeline.Time className="text-zinc-700">Habitaciones</Timeline.Time>
+                <Timeline.Title>Descansa en una de estas cómodas habitaciones, cuidadosamente diseñadas y amuebladas para ofrecerte todo lo que necesitas.</Timeline.Title>
                 <Timeline.Body className="text-zinc-700">
-                  
+                  <p>
+                    {inventario.habitaciones
+                      .filter(e => e.existencia)
+                      .map(e => e.nombre)
+                      .join(", ")}
+                  </p>
                 </Timeline.Body>
               </Timeline.Content>
             </Timeline.Item>
             <Timeline.Item>
               <Timeline.Point />
               <Timeline.Content>
-                <Timeline.Time className="text-zinc-700">Kitchen</Timeline.Time>
-                <Timeline.Title className="text-zinc-700">Equipped kitchen feactures a wide range of top-notch appliances, spacious granite countertops with a central island</Timeline.Title>
+                <Timeline.Time className="text-zinc-700">Cocina</Timeline.Time>
+                <Timeline.Title >La cocina equipada cuenta con una amplia variedad de electrodomésticos de alta gama, encimeras espaciosas y un mesón central.</Timeline.Title>
                 <Timeline.Body className="text-zinc-700">
-                  Microwave oven, stove, refrigerator/freezer, coffee maker, trays, glasses, cutlery, pots and pans
+                  <p>
+                    {inventario.cocina
+                      .filter(e => e.existencia)
+                      .map(e => e.nombre)
+                      .join(", ")}
+                  </p>
                 </Timeline.Body>
               </Timeline.Content>
             </Timeline.Item>
             <Timeline.Item>
               <Timeline.Point />
               <Timeline.Content>
-                <Timeline.Time className="text-zinc-700">Bathroom</Timeline.Time>
-                <Timeline.Title >The aparment features a relaxing bathroom with clean towels and basic toiletries to ensure maximum comfort and convenience.</Timeline.Title>
+                <Timeline.Time className="text-zinc-700">Baños</Timeline.Time>
+                <Timeline.Title >El apartamento cuenta con un baño relajante, con toallas limpias y artículos de tocador básicos para garantizar la máxima comodidad y conveniencia.</Timeline.Title>
                 <Timeline.Body className="text-zinc-700">
-                  Shower, vanity, mirror, toilet, towels, essential toiletries
+                  <p>
+                    {inventario.bano
+                      .filter(e => e.existencia)
+                      .map(e => e.nombre)
+                      .join(", ")}
+                  </p>
                 </Timeline.Body>
               </Timeline.Content>
             </Timeline.Item>
@@ -138,7 +152,7 @@ const Property = () => {
         </div>
 
       </section>
-      <Footer /> 
+      <Footer />
     </>
   )
 }
