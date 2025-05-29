@@ -41,7 +41,7 @@ const Property = () => {
       <HeaderPrincipal
       />
       <section className="pt-16 pb-10 bg-zinc-100">
-        <div className="w-10/12 m-auto">
+        <div className="w-11/12 m-auto">
 
           <Breadcrumb className="mb-5 hidden md:block" aria-label="Default breadcrumb example">
             <Breadcrumb.Item href="/" icon={HiHome}>
@@ -82,74 +82,107 @@ const Property = () => {
           </div>
         </div>
       </section>
-      <section className=" py-10">
-        <div className="w-10/12 m-auto">
-          <p className="text-4xl font-bold my-5">Durante tu estancia, <span className="text-cyan-600"> podrás disfrutar</span> de...</p>
-          <Timeline horizontal >
-            <Timeline.Item>
-              <Timeline.Point />
-              <Timeline.Content>
-                <Timeline.Time className="text-zinc-700">Sala</Timeline.Time>
-                <Timeline.Title className=" font-bold text-xl">Tendrás un excelente lugar para disfrutar de momentos divertidos e inolvidables después de un día ajetreado o una salida.</Timeline.Title>
-                <Timeline.Body className="text-zinc-700" >
+      <section className=" py-10  bg-zinc-100">
+        <div className="w-11/12 m-auto md:flex md:gap-10">
+          <div className="">
+            <p className="text-4xl font-bold my-5">Durante tu estancia, <span className="text-cyan-600"> podrás disfrutar</span> de...</p>
+            <Timeline vertical >
+              <Timeline.Item>
+                <Timeline.Point />
+                <Timeline.Content>
+                  <Timeline.Time className="text-zinc-700">Sala</Timeline.Time>
+                  <Timeline.Title className=" font-bold text-xl">Tendrás un excelente lugar para disfrutar de momentos divertidos e inolvidables después de un día ajetreado o una salida.</Timeline.Title>
+                  <Timeline.Body className="text-zinc-700" >
 
-                  <p>
-                    {inventario.entretenimiento
-                      .filter(e => e.existencia)
-                      .map(e => e.nombre)
-                      .join(", ")}
-                  </p>
-                </Timeline.Body>
+                    <p>
+                      {inventario.entretenimiento
+                        .filter(e => e.existencia)
+                        .map(e => e.nombre)
+                        .join(", ")}
+                    </p>
+                  </Timeline.Body>
 
-              </Timeline.Content>
-            </Timeline.Item>
-            <Timeline.Item>
-              <Timeline.Point />
-              <Timeline.Content>
-                <Timeline.Time className="text-zinc-700">Habitaciones</Timeline.Time>
-                <Timeline.Title>Descansa en una de estas cómodas habitaciones, cuidadosamente diseñadas y amuebladas para ofrecerte todo lo que necesitas.</Timeline.Title>
-                <Timeline.Body className="text-zinc-700">
-                  <p>
-                    {inventario.habitaciones
-                      .filter(e => e.existencia)
-                      .map(e => e.nombre)
-                      .join(", ")}
-                  </p>
-                </Timeline.Body>
-              </Timeline.Content>
-            </Timeline.Item>
-            <Timeline.Item>
-              <Timeline.Point />
-              <Timeline.Content>
-                <Timeline.Time className="text-zinc-700">Cocina</Timeline.Time>
-                <Timeline.Title >La cocina equipada cuenta con una amplia variedad de electrodomésticos de alta gama, encimeras espaciosas y un mesón central.</Timeline.Title>
-                <Timeline.Body className="text-zinc-700">
-                  <p>
-                    {inventario.cocina
-                      .filter(e => e.existencia)
-                      .map(e => e.nombre)
-                      .join(", ")}
-                  </p>
-                </Timeline.Body>
-              </Timeline.Content>
-            </Timeline.Item>
-            <Timeline.Item>
-              <Timeline.Point />
-              <Timeline.Content>
-                <Timeline.Time className="text-zinc-700">Baños</Timeline.Time>
-                <Timeline.Title >El apartamento cuenta con un baño relajante, con toallas limpias y artículos de tocador básicos para garantizar la máxima comodidad y conveniencia.</Timeline.Title>
-                <Timeline.Body className="text-zinc-700">
-                  <p>
-                    {inventario.bano
-                      .filter(e => e.existencia)
-                      .map(e => e.nombre)
-                      .join(", ")}
-                  </p>
-                </Timeline.Body>
-              </Timeline.Content>
-            </Timeline.Item>
-          </Timeline>
+                </Timeline.Content>
+              </Timeline.Item>
+              <Timeline.Item>
+                <Timeline.Point />
+                <Timeline.Content>
+                  <Timeline.Time className="text-zinc-700">Habitaciones</Timeline.Time>
+                  <Timeline.Title>Descansa en una de estas cómodas habitaciones, cuidadosamente diseñadas y amuebladas para ofrecerte todo lo que necesitas.</Timeline.Title>
+                  <Timeline.Body className="text-zinc-700">
+                    <p>
+                      {inventario.habitaciones
+                        .filter(e => e.existencia)
+                        .map(e => e.nombre)
+                        .join(", ")}
+                    </p>
+                  </Timeline.Body>
+                </Timeline.Content>
+              </Timeline.Item>
+              <Timeline.Item>
+                <Timeline.Point />
+                <Timeline.Content>
+                  <Timeline.Time className="text-zinc-700">Cocina</Timeline.Time>
+                  <Timeline.Title >La cocina equipada cuenta con una amplia variedad de electrodomésticos de alta gama, encimeras espaciosas y un mesón central.</Timeline.Title>
+                  <Timeline.Body className="text-zinc-700">
+                    <p>
+                      {inventario.cocina
+                        .filter(e => e.existencia)
+                        .map(e => e.nombre)
+                        .join(", ")}
+                    </p>
+                  </Timeline.Body>
+                </Timeline.Content>
+              </Timeline.Item>
+              <Timeline.Item>
+                <Timeline.Point />
+                <Timeline.Content>
+                  <Timeline.Time className="text-zinc-700">Baños</Timeline.Time>
+                  <Timeline.Title >El apartamento cuenta con un baño relajante, con toallas limpias y artículos de tocador básicos para garantizar la máxima comodidad y conveniencia.</Timeline.Title>
+                  <Timeline.Body className="text-zinc-700">
+                    <p>
+                      {inventario.bano
+                        .filter(e => e.existencia)
+                        .map(e => e.nombre)
+                        .join(", ")}
+                    </p>
+                  </Timeline.Body>
+                </Timeline.Content>
+              </Timeline.Item>
+            </Timeline>
+          </div>
+
+          <section className="max-w-3xl mx-auto p-6 bg-white shadow-xl rounded-2xl mt-10 ">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
+              🏡 Reglas de tu hogar temporal ideal
+            </h2>
+
+            <div className="space-y-4 text-gray-700 text-base leading-relaxed">
+              <p>
+                <strong>🕒 Check-in:</strong> A partir de las <span className="font-semibold">3:00 p.m.</span><br />
+                <strong>🕚 Check-out:</strong> Antes de las <span className="font-semibold">11:00 a.m.</span>
+              </p>
+
+              <p>
+                Para garantizar una excelente experiencia, tenemos algunas normas de convivencia:
+              </p>
+
+              <ul className="list-disc list-inside pl-4 space-y-2">
+                <li>🚫 No se permiten fiestas ni eventos.</li>
+                <li>🔇 Respeta el horario de silencio: <span className="font-semibold">10:00 p.m. - 8:00 a.m.</span></li>
+                <li>🚭 Prohibido fumar dentro del alojamiento (área designada en el balcón).</li>
+                <li>🐶 Mascotas permitidas solo con solicitud previa.</li>
+                <li>🧼 Cuida el espacio como si fuera tuyo.</li>
+              </ul>
+
+              <p className="italic text-gray-600">
+                Disfruta de una estadía cómoda, tranquila y llena de buenas experiencias.
+              </p>
+            </div>
+          </section>
+
         </div>
+
 
       </section>
       <Footer />
