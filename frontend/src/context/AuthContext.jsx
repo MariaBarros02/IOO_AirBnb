@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data);
       setIsAuthenticated(true);
     } catch (error) {
+      console.error("Error al registrarse:", error);
       setErrors(error.response?.data || ["Error al registrarse"]);
     }
   };
