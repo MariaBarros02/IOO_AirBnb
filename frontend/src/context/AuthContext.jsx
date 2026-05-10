@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/perfil", {
+      const res = await axios.get(`${API_URL}/api/perfil`, {
         withCredentials: true,
       });
 

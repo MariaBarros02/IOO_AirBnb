@@ -8,6 +8,7 @@ import { formatearDinero } from '../utils/formatearDinero.js';
 import { usePropiedad } from '../context/PropiedadContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import Notificacion from './Notificacion.jsx';
+const API_URL = import.meta.env.VITE_API_URL;
 const TablaPropiedades = () => {
 
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ const TablaPropiedades = () => {
 
     const cargarPropiedades = async (pagina = 1) => {
         try {
-            const response = await axios.get(`http://localhost:5000/admin/propiedades?page=${pagina}&limit=5`, {
+            const response = await axios.get(`${API_URL}/admin/propiedades?page=${pagina}&limit=5`, {
                 withCredentials: true,
             })
      
@@ -44,7 +45,7 @@ const TablaPropiedades = () => {
     const eliminarPropiedad = async (id) => {
 
         try {
-            const response = await axios.delete(`http://localhost:5000/admin/propiedad/${id}`, {
+            const response = await axios.delete(`${API_URL}/admin/propiedad/${id}`, {
                 withCredentials: true,
             })
             setOpenModalEliminar(false);
@@ -62,7 +63,7 @@ const TablaPropiedades = () => {
     const cambiarVisibilidadPropiedad = async (id) => {
        
         try {
-            const response = await axios.get(`http://localhost:5000/admin/propiedad/${id}/cambiarVisibilidad`, {
+            const response = await axios.get(`${API_URL}/admin/propiedad/${id}/cambiarVisibilidad`, {
                 withCredentials: true,
             })
             setOpenModalVisibilidad(false);
@@ -79,20 +80,20 @@ const TablaPropiedades = () => {
 
     return (
 
-        <section className="py-10 px-10">
+        <section className="px-10 py-10">
             {msg && <Notificacion notificacion={toast} />}
-            <div className=" max-w-7xl mx-auto mb-6 flex justify-between items-center">
+            <div className="flex items-center justify-between mx-auto mb-6 max-w-7xl">
                     <h1 className="text-4xl font-bold uppercase">Propiedades</h1>
-                    <Link className='bg-lime-600 p-2 text-white rounded-lg text-center text-xs hover:bg-lime-700' to="/admin/adminPropiedad" >
+                    <Link className='p-2 text-xs text-center text-white rounded-lg bg-lime-600 hover:bg-lime-700' to="/admin/adminPropiedad" >
                         Agregar Propiedad
                     </Link>
             </div>
 
 
             {/* Tabla de propiedades */}
-            <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto items-start rounded-lg shadow-lg max-w-5xl">
+            <div className="flex flex-col items-start max-w-5xl gap-8 mx-auto rounded-lg shadow-lg md:flex-row max-w-7xl">
                 <table className="w-full text-sm bg-white dark:bg-gray-800">
-                    <thead className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                    <thead className="text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
                         <tr>
                             <th className="p-4 text-center">ID</th>
                             <th className="p-4 text-center">Titulo</th>
@@ -107,16 +108,16 @@ const TablaPropiedades = () => {
                                 <tr key={index} className="border-b dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
                                     <td className="p-4 text-center">{index + 1}</td>
                                     <td className="p-4 text-center">{propiedad.titulo}</td>
-                                    <td className="p-4 text-center w-48"><img src={`http://localhost:5000${propiedad.imagenes[0]}`} alt="Propiedad" /></td>
+                                    <td className="w-48 p-4 text-center"><img src={`${API_URL}${propiedad.imagenes[0]}`} alt="Propiedad" /></td>
                                     <td className="p-4 text-center capitalize">{formatearDinero(propiedad.precioDia)}</td>
                                     <td className="p-4">
-                                        <div className='flex flex-col md:flex-row justify-center'>
+                                        <div className='flex flex-col justify-center md:flex-row'>
                                             <button className='p-2'
                                                 onClick={() => {
                                                     setEdicion(propiedad)
                                                     navigate(`/admin/adminPropiedad/${propiedad._id}`)
                                                 }}>
-                                                <BiEdit className='text-3xl text-cyan-700 hover:text-cyan-800 m-auto' title='Editar' />
+                                                <BiEdit className='m-auto text-3xl text-cyan-700 hover:text-cyan-800' title='Editar' />
                                             </button>
                                             <Button size="xs" color="transparent" onClick={() => {
                                                 setOpenModalEliminar(true)
@@ -128,7 +129,7 @@ const TablaPropiedades = () => {
                                                 <ModalHeader />
                                                 <ModalBody>
                                                     <div className="text-center">
-                                                        <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                                                        <HiOutlineExclamationCircle className="mx-auto mb-4 text-gray-400 h-14 w-14 dark:text-gray-200" />
                                                         <h3 className="mb-5 text-lg font-normal text-gray-800">
                                                             ¿Estás segur@ de que quieres eliminar esta propiedad?
                                                         </h3>
@@ -153,7 +154,7 @@ const TablaPropiedades = () => {
                                                 <ModalHeader />
                                                 <ModalBody>
                                                     <div className="text-center">
-                                                        <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                                                        <HiOutlineExclamationCircle className="mx-auto mb-4 text-gray-400 h-14 w-14 dark:text-gray-200" />
                                                         <h3 className="mb-5 text-lg font-normal text-gray-800">
                                                             ¿Estás segur@ de que quieres {propiedadSeleccionada?.visibilidad ? "ocultar" : "dejar de ocultar"} esta propiedad?
                                                         </h3>
@@ -188,7 +189,7 @@ const TablaPropiedades = () => {
             </div>
 
             {/* Paginación */}
-            <div className="max-w-7xl mx-auto mt-6 grid grid-cols-3 items-center">
+            <div className="grid items-center grid-cols-3 mx-auto mt-6 max-w-7xl">
                 <div>
                     <Button
                         className="ml-0"

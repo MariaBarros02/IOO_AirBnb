@@ -15,7 +15,7 @@ const Home = () => {
 
   const cargarPropiedadesMostrar = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/admin/propiedades`)
+      const response = await axios.get(`https://ioo-airbnb.onrender.com/admin/propiedades`)
 
       const visibles = response.data.propiedades.filter(p => p.visibilidad === true).slice(-3)
       setPropiedadesMostrar(visibles)
@@ -28,10 +28,10 @@ const Home = () => {
     <>
       <HeaderPrincipal  />
 
-      <section className=" py-10">
-        <div className="w-10/12 m-auto grid grid-cols-1 justify-center items-center gap-5 lg:grid-cols-2">
+      <section className="py-10 ">
+        <div className="grid items-center justify-center w-10/12 grid-cols-1 gap-5 m-auto lg:grid-cols-2">
           <div className="text-center lg:text-left ">
-            <h2 className="uppercase text-3xl md:text-5xl font-bold  mb-5">
+            <h2 className="mb-5 text-3xl font-bold uppercase md:text-5xl">
               Encuentra aquí tu <span className="text-cyan-700">próximo hogar </span>for
               cuando viajes...
             </h2>
@@ -49,14 +49,14 @@ const Home = () => {
       </section>
 
       {propiedadesMostrar.length > 2 ? (
-      <section className="bg-zinc-200 py-10">
+      <section className="py-10 bg-zinc-200">
         <div className="w-10/12 m-auto lg:w-11/12">
-          <div className="my-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-5">
+          <div className="grid grid-cols-1 gap-8 my-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
 
             {propiedadesMostrar.map((propiedad,index) => (
                 <CardFoto
                 key={propiedad._id}
-                imagen={`http://localhost:5000${propiedad.imagenes[0]}`}
+                imagen={`${API_URL}${propiedad.imagenes[0]}`}
                 titulo={propiedad.titulo}
                 clasesTitulo={`${((index+1)%2 === 0 )? 'text-rose-600': 'text-cyan-600'} text-xl`}
                 parrafo={propiedad.descripcionBreve}
@@ -65,10 +65,10 @@ const Home = () => {
               />
             ))}
             
-            <div className="shadow-lg rounded-lg banner banner--bg_1 transform transition duration-300 hover:scale-110">
+            <div className="transition duration-300 transform rounded-lg shadow-lg banner banner--bg_1 hover:scale-110">
               <Link
                 to="/propiedades"
-                className="w-full h-full flex justify-center  rounded-lg  items-center bg-white  bg-opacity-30 hover:bg-black hover:bg-opacity-40 "
+                className="flex items-center justify-center w-full h-full bg-white rounded-lg bg-opacity-30 hover:bg-black hover:bg-opacity-40 "
               >
                 <svg
                   className="w-[70px] h-[70px] text-white"
@@ -94,8 +94,8 @@ const Home = () => {
       </section>
       ) : (<div></div>)}
       <section className="banner banner--bg_2 ">
-        <div className="bg-zinc-900 bg-opacity-70 text-white py-20 flex flex-col justify-center items-center text-center">
-          <p className="text-xl lg:text-4xl font-bold w-8/12 m-auto ">
+        <div className="flex flex-col items-center justify-center py-20 text-center text-white bg-zinc-900 bg-opacity-70">
+          <p className="w-8/12 m-auto text-xl font-bold lg:text-4xl ">
           ¿Te ha gustado alguno de nuestros alojamientos?
           ¡Te invitamos a contactarnos para que puedas alquilar tu favorito!
           </p>
@@ -110,35 +110,35 @@ const Home = () => {
       </section>
 
       <section className="py-16 bg-zinc-200 ">
-        <h2 className="text-center uppercase text-3xl w-10/12 m-auto font-bold lg:text-4xl mb-4">
+        <h2 className="w-10/12 m-auto mb-4 text-3xl font-bold text-center uppercase lg:text-4xl">
           {" "}
           <span className="text-rose-600">Potencia </span>tus{" "}
           <span className="text-cyan-600">vacaciones</span> con nosotros porque...
         </h2>
-        <div className="w-9/12 m-auto grid grid-cols-1 gap-3 lg:grid-cols-3 lg:items-center text-center">
+        <div className="grid w-9/12 grid-cols-1 gap-3 m-auto text-center lg:grid-cols-3 lg:items-center">
           <div className="my-3">
             <img
               src="/images/image_21.jpg"
-              className="rounded-full shadow-lg border-4 border-white w-4/5 m-auto"
+              className="w-4/5 m-auto border-4 border-white rounded-full shadow-lg"
               alt="..."
             />
-            <p className="text-md mt-3">
+            <p className="mt-3 text-md">
             Nuestras propiedades están diseñadas para brindar comodidad a familias y grupos de amigos.
             Con amplios espacios y comodidades de primer nivel, podrás relajarte y disfrutar al máximo de tus vacaciones.
             </p>
           </div>
-          <div className="text-2xl font-semibold italic text-center mb-5 ">
-            <p className="before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-rose-600 relative inline-block">
-              <span className="relative text-white text-6xl px-2">&</span>
+          <div className="mb-5 text-2xl italic font-semibold text-center ">
+            <p className="relative inline-block before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-rose-600">
+              <span className="relative px-2 text-6xl text-white">&</span>
             </p>
           </div>
           <div className="my-3">
             <img
               src="/images/image_1.jpg"
-              className="rounded-full shadow-lg border-4 border-white w-4/5 m-auto"
+              className="w-4/5 m-auto border-4 border-white rounded-full shadow-lg"
               alt="..."
             />
-            <p className=" text-md my-3">
+            <p className="my-3 text-md">
             Nuestro equipo está comprometido a asistirte con cualquier necesidad o inquietud durante tu estadía, asegurando que tu experiencia sea fluida y placentera de principio a fin.
             </p>
           </div>
