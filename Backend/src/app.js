@@ -8,7 +8,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from 'path';
 import { fileURLToPath } from "url";
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const __nombreArchivo = fileURLToPath(import.meta.url);
 const __directorioArchivo = path.dirname(__nombreArchivo);
