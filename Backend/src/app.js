@@ -8,12 +8,13 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from 'path';
 import { fileURLToPath } from "url";
+require("dotenv").config();
 
 const __nombreArchivo = fileURLToPath(import.meta.url);
 const __directorioArchivo = path.dirname(__nombreArchivo);
 const app = express();
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
