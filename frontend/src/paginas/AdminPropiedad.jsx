@@ -352,8 +352,8 @@ const AdminPropiedad = () => {
 
             const response = await axios[propiedad?._id ? 'put' : 'post'](
                 propiedad?._id
-                    ? `http://localhost:5000/admin/propiedad/${propiedad._id}`
-                    : 'http://localhost:5000/admin/agregarPropiedad',
+                    ? `${API_URL}/admin/propiedad/${propiedad._id}`
+                    : `${API_URL}/admin/agregarPropiedad`,
                 formData,
                 {
                     withCredentials: true,
@@ -404,7 +404,7 @@ const AdminPropiedad = () => {
             <div className='w-11/12 m-auto mt-10'>
                 <div className='flex items-center gap-5'>
                     <Link
-                        className='bg-lime-600 text-white rounded-full p-2 text-xl md:text-3xl hover:bg-lime-500'
+                        className='p-2 text-xl text-white rounded-full bg-lime-600 md:text-3xl hover:bg-lime-500'
                         title='Regresar'
                         to="/admin"
                     >
@@ -418,8 +418,8 @@ const AdminPropiedad = () => {
             <Modal show={openModal} onClose={() => setOpenModal(false)} popup>
 
                 <ModalBody>
-                    <div className="text-center pt-10">
-                        <HiCheckCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                    <div className="pt-10 text-center">
+                        <HiCheckCircle className="mx-auto mb-4 text-gray-400 h-14 w-14 dark:text-gray-200" />
                         <h3 className="mb-5 text-lg font-normal text-gray-800">
                             La propiedad se ha guardado correctamente.
                         </h3>
@@ -431,11 +431,11 @@ const AdminPropiedad = () => {
 
 
 
-                <form className="p-3  flex flex-col gap-4 " onSubmit={handleSubmit} >
+                <form className="flex flex-col gap-4 p-3 " onSubmit={handleSubmit} >
                     <p className='mt-5 ml-6 text-lg'>Información General</p>
-                    <div className='border-2 py-3 px-10 '>
+                    <div className='px-10 py-3 border-2 '>
                         <div className='my-2'>
-                            <div className="mb-2 block">
+                            <div className="block mb-2">
                                 <Label htmlFor="titulo" className='text-base uppercase'>Titulo</Label>
                             </div>
                             <TextInput id="titulo"
@@ -447,7 +447,7 @@ const AdminPropiedad = () => {
                                 color={touched.titulo && errores.titulo ? 'failure' : 'gray'}
                                 helperText={
                                     touched.titulo && errores.titulo ? (
-                                        <span className="text-red-500 text-sm">
+                                        <span className="text-sm text-red-500">
                                             {errores.titulo}
                                         </span>
                                     ) : null
@@ -455,7 +455,7 @@ const AdminPropiedad = () => {
                             />
                         </div>
                         <div>
-                            <div className="mb-2 block">
+                            <div className="block mb-2">
                                 <Label htmlFor="precioDia" className='text-base uppercase'>Precio (Día)</Label>
                             </div>
                             <TextInput id="precioDia"
@@ -468,7 +468,7 @@ const AdminPropiedad = () => {
                                 color={touched.precioDia && errores.precioDia ? 'failure' : 'gray'}
                                 helperText={
                                     touched.precioDia && errores.precioDia ? (
-                                        <span className="text-red-500 text-sm">
+                                        <span className="text-sm text-red-500">
                                             {errores.precioDia}
                                         </span>
                                     ) : null
@@ -476,9 +476,9 @@ const AdminPropiedad = () => {
                             />
                         </div>
                         <div className='grid grid-cols-3 gap-2'>
-                            <div className="mt-2 col-span-3 md:col-span-1 ">
-                                <div className="mb-2 block">
-                                    <Label htmlFor="tipoInmueble" className='uppercase text-base'>Tipo de Inmueble</Label>
+                            <div className="col-span-3 mt-2 md:col-span-1 ">
+                                <div className="block mb-2">
+                                    <Label htmlFor="tipoInmueble" className='text-base uppercase'>Tipo de Inmueble</Label>
                                 </div>
                                 <Select id="tipoInmueble" required onChange={handleChange} value={datosFormulario.tipoInmueble}>
                                     <option value="casa">Casa</option>
@@ -487,8 +487,8 @@ const AdminPropiedad = () => {
                                     <option value="habitación">Habitación</option>
                                 </Select>
                             </div>
-                            <div className='my-2 col-span-3 md:col-span-1'>
-                                <div className="mb-2 block">
+                            <div className='col-span-3 my-2 md:col-span-1'>
+                                <div className="block mb-2">
                                     <Label htmlFor="ciudad" className='text-base uppercase'>Ciudad</Label>
                                 </div>
                                 <TextInput id="ciudad"
@@ -500,15 +500,15 @@ const AdminPropiedad = () => {
                                     color={touched.ciudad && errores.ciudad ? 'failure' : 'gray'}
                                     helperText={
                                         touched.ciudad && errores.ciudad ? (
-                                            <span className="text-red-500 text-sm">
+                                            <span className="text-sm text-red-500">
                                                 {errores.ciudad}
                                             </span>
                                         ) : null
                                     }
                                 />
                             </div>
-                            <div className='my-2 col-span-3 md:col-span-1'>
-                                <div className="mb-2 block">
+                            <div className='col-span-3 my-2 md:col-span-1'>
+                                <div className="block mb-2">
                                     <Label htmlFor="barrio" className='text-base uppercase'>Barrio</Label>
                                 </div>
                                 <TextInput id="barrio"
@@ -520,7 +520,7 @@ const AdminPropiedad = () => {
                                     color={touched.barrio && errores.barrio ? 'failure' : 'gray'}
                                     helperText={
                                         touched.barrio && errores.barrio ? (
-                                            <span className="text-red-500 text-sm">
+                                            <span className="text-sm text-red-500">
                                                 {errores.barrio}
                                             </span>
                                         ) : null
@@ -531,7 +531,7 @@ const AdminPropiedad = () => {
                         </div>
 
                         <div className='my-2'>
-                            <div className="mb-2 block">
+                            <div className="block mb-2">
                                 <Label htmlFor="direccion" className='text-base uppercase'>Dirección</Label>
                             </div>
                             <TextInput id="direccion"
@@ -543,7 +543,7 @@ const AdminPropiedad = () => {
                                 color={touched.direccion && errores.direccion ? 'failure' : 'gray'}
                                 helperText={
                                     touched.direccion && errores.direccion ? (
-                                        <span className="text-red-500 text-sm">
+                                        <span className="text-sm text-red-500">
                                             {errores.direccion}
                                         </span>
                                     ) : null
@@ -551,25 +551,25 @@ const AdminPropiedad = () => {
                             />
                         </div>
                         <div className={`my-2 ${touched.imagenes && errores.imagenes ? 'border-2 border-red-500 p-4 rounded-lg' : ''}`} >
-                            <Label className="mb-2 block uppercase text-base" htmlFor="imagenes">
+                            <Label className="block mb-2 text-base uppercase" htmlFor="imagenes">
                                 Imágenes
                             </Label>
                             {/* Mostrar imágenes existentes */}
                             {imagenesExistentes.length > 0 && (
                                 <div className="mb-4">
-                                    <h4 className="text-sm font-medium mb-2">Imágenes existentes:</h4>
+                                    <h4 className="mb-2 text-sm font-medium">Imágenes existentes:</h4>
                                     <div className="flex flex-wrap gap-2">
                                         {imagenesExistentes.map((img, index) => (
                                             <div key={`existente-${index}`} className="relative">
                                                 <img
                                                     src={`http://localhost:5000${img}`}
                                                     alt={`Imagen ${index + 1}`}
-                                                    className="h-20 w-20 object-cover rounded"
+                                                    className="object-cover w-20 h-20 rounded"
                                                 />
                                                 <button
                                                     type="button"
                                                     onClick={() => eliminarImagenExistente(index)}
-                                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                                                    className="absolute p-1 text-white bg-red-500 rounded-full -top-2 -right-2"
                                                 >
                                                     <BiTrash size={14} />
                                                 </button>
@@ -582,19 +582,19 @@ const AdminPropiedad = () => {
                             {/* Mostrar imágenes nuevas seleccionadas */}
                             {imagenes.length > 0 && (
                                 <div className="mb-4">
-                                    <h4 className="text-sm font-medium mb-2">Nuevas imágenes:</h4>
+                                    <h4 className="mb-2 text-sm font-medium">Nuevas imágenes:</h4>
                                     <div className="flex flex-wrap gap-2">
                                         {imagenes.map((img, index) => (
                                             <div key={`nueva-${index}`} className="relative">
                                                 <img
                                                     src={URL.createObjectURL(img)}
                                                     alt={`Nueva imagen ${index + 1}`}
-                                                    className="h-20 w-20 object-cover rounded"
+                                                    className="object-cover w-20 h-20 rounded"
                                                 />
                                                 <button
                                                     type="button"
                                                     onClick={() => eliminarImagenNueva(index)}
-                                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                                                    className="absolute p-1 text-white bg-red-500 rounded-full -top-2 -right-2"
                                                 >
                                                     <BiTrash size={14} />
                                                 </button>
@@ -617,7 +617,7 @@ const AdminPropiedad = () => {
                             ) : (<HelperText className="mt-1">Seleccione las fotografias de su propiedad </HelperText>)}
                         </div>
                         <div className='my-2'>
-                            <div className="mb-2 block">
+                            <div className="block mb-2">
                                 <Label htmlFor="descripcionBreve" className='text-base uppercase'>Descripción Breve</Label>
                             </div>
                             <Textarea
@@ -631,7 +631,7 @@ const AdminPropiedad = () => {
                                 onBlur={handleBlur}
                                 helperText={
                                     touched.descripcionBreve && errores.descripcionBreve ? (
-                                        <span className="text-red-500 text-sm">
+                                        <span className="text-sm text-red-500">
                                             {errores.descripcionBreve}
                                         </span>
                                     ) : (
@@ -642,7 +642,7 @@ const AdminPropiedad = () => {
                         </div>
 
                         <div className='my-2'>
-                            <div className="mb-2 block">
+                            <div className="block mb-2">
                                 <Label htmlFor="descripcionCompleta" className='text-base uppercase'>Descripción Completa</Label>
                             </div>
                             <Textarea
@@ -656,7 +656,7 @@ const AdminPropiedad = () => {
                                 onBlur={handleBlur}
                                 helperText={
                                     touched.descripcionCompleta && errores.descripcionCompleta ? (
-                                        <span className="text-red-500 text-sm">
+                                        <span className="text-sm text-red-500">
                                             {errores.descripcionCompleta}
                                         </span>
                                     ) : (
@@ -671,8 +671,8 @@ const AdminPropiedad = () => {
 
                     {/* Información del inmueble */}
                     <p className='mt-2 ml-6 text-lg'>Información del Inmueble</p>
-                    <div className='border-2 py-3 px-10'>
-                        <div className='grid sm:grid-cols-2 lg:grid-cols-5 gap-2'>
+                    <div className='px-10 py-3 border-2'>
+                        <div className='grid gap-2 sm:grid-cols-2 lg:grid-cols-5'>
                             {[
                                 { id: 'habitaciones', label: 'Habitaciones', value: datosFormulario.habitaciones },
                                 { id: 'banos', label: 'Baños', value: datosFormulario.banos },
@@ -680,8 +680,8 @@ const AdminPropiedad = () => {
                                 { id: 'areaInmueble', label: 'Área del inmueble', value: datosFormulario.areaInmueble },
                                 { id: 'invitadosMax', label: 'Máximo de invitados', value: datosFormulario.invitadosMax }
                             ].map((field) => (
-                                <div key={field.id} className='my-2 flex justify-between sm:flex-col'>
-                                    <div className="mt-2 block">
+                                <div key={field.id} className='flex justify-between my-2 sm:flex-col'>
+                                    <div className="block mt-2">
                                         <Label htmlFor={field.id} className='text-sm uppercase'>{field.label}</Label>
                                     </div>
                                     <TextInput
@@ -697,7 +697,7 @@ const AdminPropiedad = () => {
                                     />
                                     <div className="relative min-h-[20px] mt-1">
                                         {errores[field.id] && (
-                                            <p className="absolute text-red-500 text-xs">
+                                            <p className="absolute text-xs text-red-500">
                                                 {errores[field.id]}
                                             </p>
                                         )}
@@ -711,7 +711,7 @@ const AdminPropiedad = () => {
 
                     {/* Sección de Inventario */}
                     <p className='mt-2 ml-6 text-lg'>Inventario de la Propiedad</p>
-                    <div className='border-2 py-3 px-10'>
+                    <div className='px-10 py-3 border-2'>
                         <div className="mb-4">
                             <Label htmlFor="categoria-item" className="block mb-2 text-sm font-medium text-gray-900">
                                 Categoría
@@ -756,13 +756,13 @@ const AdminPropiedad = () => {
 
                         {CATEGORIAS_INVENTARIO.map(categoria => (
                             <div key={categoria} className="mb-6">
-                                <h3 className="text-lg font-semibold mb-2">
+                                <h3 className="mb-2 text-lg font-semibold">
                                     {categoria === 'bano'
                                         ? 'Baño'
                                         : categoria === 'entretenimiento' ? 'Entretenimiento y ocio' : categoria.charAt(0).toUpperCase() + categoria.slice(1)}
                                 </h3>
                                 {datosFormulario.inventario[categoria]?.length > 0 ? (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                                    <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
                                         {datosFormulario.inventario[categoria].map((item, index) => (
                                             <div key={`${categoria}-${index}`} className="flex items-center justify-between p-2 border rounded">
                                                 <div className="flex items-center">

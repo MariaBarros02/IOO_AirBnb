@@ -108,7 +108,7 @@ const TablaPropiedades = () => {
                                 <tr key={index} className="border-b dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
                                     <td className="p-4 text-center">{index + 1}</td>
                                     <td className="p-4 text-center">{propiedad.titulo}</td>
-                                    <td className="w-48 p-4 text-center"><img src={`${API_URL}${propiedad.imagenes[0]}`} alt="Propiedad" /></td>
+                                    <td className="w-48 p-4 text-center"><img src={`${API_URL}/${propiedad.imagenes[0]}`} alt="Propiedad" /></td>
                                     <td className="p-4 text-center capitalize">{formatearDinero(propiedad.precioDia)}</td>
                                     <td className="p-4">
                                         <div className='flex flex-col justify-center md:flex-row'>

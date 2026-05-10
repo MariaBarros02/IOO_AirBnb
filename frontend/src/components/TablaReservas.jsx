@@ -33,6 +33,7 @@ const messages = {
   noEventsInRange: 'No hay eventos en este rango.',
   showMore: total => `+ Ver más (${total})`
 };
+const API_URL = import.meta.env.VITE_API_URL;
 
 const TablaReservas = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const TablaReservas = () => {
   useEffect(() => {
     const obtenerFechasOcupadas = async (propiedadId) => {
       try {
-        const response = await axios.get(`http://localhost:5000/reservas/ocupadas/${propiedadId}`, {
+        const response = await axios.get(`${API_URL}/reservas/ocupadas/${propiedadId}`, {
           withCredentials: true
         });
         const eventosTransformados = response.data.map(r => ({
@@ -97,7 +98,7 @@ const TablaReservas = () => {
   const obtenerReservas = async (pagina = 1) => {
     try {
       console.log('Obteniendo reservas...');
-      const response = await axios.get(`http://localhost:5000/admin/reservas?page=${pagina}&limit=4`, {
+      const response = await axios.get(`${API_URL}/admin/reservas?page=${pagina}&limit=4`, {
         withCredentials: true,
       });
       console.log('Respuesta del servidor:', response.data);
@@ -125,7 +126,7 @@ const TablaReservas = () => {
 
   const eliminarReserva = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/admin/reservas/${id}`, {
+      await axios.delete(`${API_URL}/admin/reservas/${id}`, {
         withCredentials: true,
       });
       setOpenModalEliminar(false);
@@ -155,7 +156,7 @@ const TablaReservas = () => {
     if (!reservaSeleccionada) return;
     try {
       // Actualizar estado de la reserva
-      await axios.put(`http://localhost:5000/admin/reservas/${reservaSeleccionada._id}`, 
+      await axios.put(`${API_URL}/admin/reservas/${reservaSeleccionada._id}`, 
         {
           name: reservaSeleccionada.name,
           lastName: reservaSeleccionada.lastName,
@@ -201,18 +202,18 @@ const TablaReservas = () => {
   const { msg: toastMsg, tipo: toastTipo } = toast;
 
   return (
-    <section className="py-10 px-10">
+    <section className="px-10 py-10">
       {toastMsg && <Notificacion notificacion={{ msg: toastMsg, tipo: toastTipo }} />}
-      <div className="max-w-7xl mx-auto mb-6 flex justify-between items-center">
+      <div className="flex items-center justify-between mx-auto mb-6 max-w-7xl">
         <h1 className="text-4xl font-bold uppercase">Reservas</h1>
-        <Link className='bg-lime-600 p-2 text-white rounded-lg text-center text-xs hover:bg-lime-700' to="/admin/adminReservas">
+        <Link className='p-2 text-xs text-center text-white rounded-lg bg-lime-600 hover:bg-lime-700' to="/admin/adminReservas">
           Agregar Reserva
         </Link>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto items-start">
+      <div className="flex flex-col items-start gap-8 mx-auto md:flex-row max-w-7xl">
         {/* Calendario a la izquierda */}
-        <div className="w-full md:w-2/5 bg-white rounded-lg shadow-lg p-4">
+        <div className="w-full p-4 bg-white rounded-lg shadow-lg md:w-2/5">
           <BigCalendar
             localizer={localizer}
             events={eventosCalendario}
@@ -238,9 +239,9 @@ const TablaReservas = () => {
         </div>
 
         {/* Tabla de reservas */}
-        <div className="w-full md:w-3/5 overflow-x-auto rounded-lg shadow-lg">
+        <div className="w-full overflow-x-auto rounded-lg shadow-lg md:w-3/5">
           <table className="w-full text-sm bg-white dark:bg-gray-800">
-            <thead className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+            <thead className="text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
               <tr>
                 <th className="p-4 text-center">Cliente</th>
                 <th className="p-4 text-center">Propiedad</th>
@@ -287,10 +288,10 @@ const TablaReservas = () => {
                     <td className="p-4">
                       <div className="flex justify-center gap-2">
                         <button className='p-2' onClick={() => handleVerInfo(reserva)}>
-                          <BiInfoCircle className='text-3xl text-blue-700 hover:text-blue-800 m-auto' title='Ver información' />
+                          <BiInfoCircle className='m-auto text-3xl text-blue-700 hover:text-blue-800' title='Ver información' />
                         </button>
                         <button className='p-2' onClick={() => navigate(`/admin/adminReservas/${reserva._id}`)}>
-                          <BiEdit className='text-3xl text-cyan-700 hover:text-cyan-800 m-auto' title='Editar' />
+                          <BiEdit className='m-auto text-3xl text-cyan-700 hover:text-cyan-800' title='Editar' />
                         </button>
                         <button
                           className='p-2'
@@ -299,7 +300,7 @@ const TablaReservas = () => {
                             setReservaSeleccionada(reserva);
                           }}
                         >
-                          <BiTrash className='text-3xl text-red-600 hover:text-red-500 m-auto' title='Eliminar' />
+                          <BiTrash className='m-auto text-3xl text-red-600 hover:text-red-500' title='Eliminar' />
                         </button>
                       </div>
                     </td>
@@ -316,7 +317,7 @@ const TablaReservas = () => {
       </div>
 
       {/* Paginación */}
-      <div className="max-w-7xl mx-auto mt-6 grid grid-cols-3 items-center">
+      <div className="grid items-center grid-cols-3 mx-auto mt-6 max-w-7xl">
         <div>
           <Button
             className="ml-0"
@@ -350,7 +351,7 @@ const TablaReservas = () => {
         <ModalHeader />
         <ModalBody>
           <div className="text-center">
-            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <HiOutlineExclamationCircle className="mx-auto mb-4 text-gray-400 h-14 w-14 dark:text-gray-200" />
             <h3 className="mb-5 text-lg font-normal text-gray-800">
               ¿Estás segur@ de que quieres eliminar esta reserva?
             </h3>
@@ -440,7 +441,7 @@ const TablaReservas = () => {
                 <select 
                   value={estadoReservaSeleccionada}
                   onChange={(e) => setEstadoReservaSeleccionada(e.target.value)}
-                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                  className="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
                   <option value="Pendiente">Pendiente</option>
                   <option value="Confirmada">Confirmada</option>
@@ -453,7 +454,7 @@ const TablaReservas = () => {
                   type="color" 
                   value={colorPropiedadSeleccionada}
                   onChange={(e) => setColorPropiedadSeleccionada(e.target.value)}
-                  className="mt-1 block w-full h-10"
+                  className="block w-full h-10 mt-1"
                 />
               </div>
             </div>

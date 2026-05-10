@@ -6,6 +6,7 @@ import HeaderPrincipal from "../layout/HeaderPrincipal";
 import Footer from "../layout/Footer"
 import { Carousel, Button, Timeline, Breadcrumb } from "flowbite-react";
 import { HiArrowNarrowRight, HiHome } from "react-icons/hi";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Property = () => {
 
@@ -22,7 +23,7 @@ const Property = () => {
 
   const cargarPropiedad = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/admin/propiedad/${idPropiedad}`, {
+      const response = await axios.get(`${API_URL}admin/propiedad/${idPropiedad}`, {
         withCredentials: true,
       })
       setPropiedad(response.data);
@@ -34,7 +35,7 @@ const Property = () => {
     }
   }
 
-  if (!propiedad) return <p className="text-center mt-10">Cargando propiedad...</p>;
+  if (!propiedad) return <p className="mt-10 text-center">Cargando propiedad...</p>;
 
   return (
     <>
@@ -43,14 +44,14 @@ const Property = () => {
       <section className="pt-16 pb-10 bg-zinc-100">
         <div className="w-11/12 m-auto">
 
-          <Breadcrumb className="mb-5 hidden md:block" aria-label="Default breadcrumb example">
+          <Breadcrumb className="hidden mb-5 md:block" aria-label="Default breadcrumb example">
             <Breadcrumb.Item href="/" icon={HiHome}>
               Inicio
             </Breadcrumb.Item>
             <Breadcrumb.Item href="/propiedades">Propiedades</Breadcrumb.Item>
             <Breadcrumb.Item>{propiedad.titulo}</Breadcrumb.Item>
           </Breadcrumb>
-          <h2 className="text-2xl md:text-5xl font-bold mb-5">{propiedad.titulo}</h2>
+          <h2 className="mb-5 text-2xl font-bold md:text-5xl">{propiedad.titulo}</h2>
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
             <div className=" lg:col-span-3">
 
@@ -67,31 +68,31 @@ const Property = () => {
               </div>
 
 
-              <Button className="w-full my-5 uppercase font-bold tracking-widest block" outline gradientDuoTone="cyanToBlue" size="xl" href="#" target="_blank">
+              <Button className="block w-full my-5 font-bold tracking-widest uppercase" outline gradientDuoTone="cyanToBlue" size="xl" href="#" target="_blank">
                 Contáctanos para consultar disponibilidad
               </Button>
 
 
             </div>
 
-            <div className="bg-white p-5 shadow-xl lg:mt-0 rounded-md lg:col-span-2 ">
-              <p className="text-xl  ">!Bienvenido a tu escapada cultural en <span className="text-cyan-600">{propiedad.ciudad}</span> en {propiedad.barrio}!</p>
+            <div className="p-5 bg-white rounded-md shadow-xl lg:mt-0 lg:col-span-2 ">
+              <p className="text-xl ">!Bienvenido a tu escapada cultural en <span className="text-cyan-600">{propiedad.ciudad}</span> en {propiedad.barrio}!</p>
               <MapByAddress city={propiedad.ciudad} neighborhood={propiedad.barrio} />
               <p >{propiedad.descripcionCompleta}</p>
             </div>
           </div>
         </div>
       </section>
-      <section className=" py-10  bg-zinc-100">
+      <section className="py-10  bg-zinc-100">
         <div className="w-11/12 m-auto md:flex md:gap-10">
           <div className="">
-            <p className="text-4xl font-bold my-5">Durante tu estancia, <span className="text-cyan-600"> podrás disfrutar</span> de...</p>
+            <p className="my-5 text-4xl font-bold">Durante tu estancia, <span className="text-cyan-600"> podrás disfrutar</span> de...</p>
             <Timeline vertical >
               <Timeline.Item>
                 <Timeline.Point />
                 <Timeline.Content>
                   <Timeline.Time className="text-zinc-700">Sala</Timeline.Time>
-                  <Timeline.Title className=" font-bold text-xl">Tendrás un excelente lugar para disfrutar de momentos divertidos e inolvidables después de un día ajetreado o una salida.</Timeline.Title>
+                  <Timeline.Title className="text-xl font-bold ">Tendrás un excelente lugar para disfrutar de momentos divertidos e inolvidables después de un día ajetreado o una salida.</Timeline.Title>
                   <Timeline.Body className="text-zinc-700" >
 
                     <p>
@@ -152,12 +153,12 @@ const Property = () => {
             </Timeline>
           </div>
 
-          <section className="max-w-3xl mx-auto p-6 bg-white shadow-xl rounded-2xl mt-10 ">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
+          <section className="max-w-3xl p-6 mx-auto mt-10 bg-white shadow-xl rounded-2xl ">
+            <h2 className="pb-2 mb-4 text-2xl font-bold text-gray-800 border-b">
               🏡 Reglas de tu hogar temporal ideal
             </h2>
 
-            <div className="space-y-4 text-gray-700 text-base leading-relaxed">
+            <div className="space-y-4 text-base leading-relaxed text-gray-700">
               <p>
                 <strong>🕒 Check-in:</strong> A partir de las <span className="font-semibold">3:00 p.m.</span><br />
                 <strong>🕚 Check-out:</strong> Antes de las <span className="font-semibold">11:00 a.m.</span>
@@ -167,7 +168,7 @@ const Property = () => {
                 Para garantizar una excelente experiencia, tenemos algunas normas de convivencia:
               </p>
 
-              <ul className="list-disc list-inside pl-4 space-y-2">
+              <ul className="pl-4 space-y-2 list-disc list-inside">
                 <li>🚫 No se permiten fiestas ni eventos.</li>
                 <li>🔇 Respeta el horario de silencio: <span className="font-semibold">10:00 p.m. - 8:00 a.m.</span></li>
                 <li>🚭 Prohibido fumar dentro del alojamiento (área designada en el balcón).</li>

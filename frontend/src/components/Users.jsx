@@ -4,6 +4,7 @@ import { Button, Modal, Label, TextInput, ModalHeader, ModalBody } from "flowbit
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -18,7 +19,7 @@ const Users = () => {
   const obtenerUsuarios = async (pagina = 1) => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/usuarios?page=${pagina}&limit=10`,
+        `${API_URL}/api/usuarios?page=${pagina}&limit=10`,
         {
           withCredentials: true,
         }
@@ -38,7 +39,7 @@ const Users = () => {
   const eliminarUsuario = async (id) => {
     
     try {
-      await axios.delete(`http://localhost:5000/admin/usuarios/${id}`, {
+      await axios.delete(`${API_URL}/admin/usuarios/${id}`, {
         withCredentials: true,
       });
       obtenerUsuarios(paginaActual);
@@ -72,7 +73,7 @@ const Users = () => {
     e.preventDefault();
     try {
       await axios.put(
-        `http://localhost:5000/admin/usuarios/${usuarioActual._id}`,
+        `${API_URL}/admin/usuarios/${usuarioActual._id}`,
         usuarioActual,
         {
           withCredentials: true,
@@ -90,17 +91,17 @@ const Users = () => {
   }, [paginaActual]);
 
   return (
-    <section className="py-6 px-10">
+    <section className="px-10 py-6">
       {/* Header con botón de logout */}
-      <div className="max-w-7xl mx-auto mb-6 flex justify-between items-center">
+      <div className="flex items-center justify-between mx-auto mb-6 max-w-7xl">
         <h1 className="text-4xl font-bold uppercase">Usuarios</h1>
 
       </div>
 
       {/* Tabla de usuarios */}
-      <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto items-start rounded-lg shadow-lg max-w-5xl">
+      <div className="flex flex-col items-start max-w-5xl gap-8 mx-auto rounded-lg shadow-lg md:flex-row max-w-7xl">
         <table className="w-full text-sm bg-white dark:bg-gray-800">
-          <thead className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+          <thead className="text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
             <tr>
               <th className="p-4 text-center">Nombre</th>
               <th className="p-4 text-center">Correo</th>
@@ -140,7 +141,7 @@ const Users = () => {
       </div>
 
       {/* Paginación */}
-      <div className="max-w-7xl mx-auto mt-6 grid grid-cols-3 items-center">
+      <div className="grid items-center grid-cols-3 mx-auto mt-6 max-w-7xl">
         <div>
           <Button
             className="ml-0"
@@ -217,7 +218,7 @@ const Users = () => {
               <div>
                 <Label>Rol</Label>
                 <select
-                  className="w-full mt-1 p-2 rounded-md border border-gray-300 dark:bg-gray-700 dark:text-white"
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-md dark:bg-gray-700 dark:text-white"
                   value={usuarioActual.role}
                   onChange={(e) =>
                     setUsuarioActual({
@@ -241,7 +242,7 @@ const Users = () => {
         <ModalHeader />
         <ModalBody>
           <div className="text-center">
-            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <HiOutlineExclamationCircle className="mx-auto mb-4 text-gray-400 h-14 w-14 dark:text-gray-200" />
             <h3 className="mb-5 text-lg font-normal text-gray-800">
               ¿Estás segur@ de que quieres eliminar este usuario?
             </h3>

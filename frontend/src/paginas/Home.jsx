@@ -5,6 +5,8 @@ import { Button } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Home = () => {
 
   const [propiedadesMostrar, setPropiedadesMostrar] = useState([]);

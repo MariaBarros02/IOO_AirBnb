@@ -12,6 +12,7 @@ import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import { parseISO } from 'date-fns';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
+const API_URL = import.meta.env.VITE_API_URL;
 
 moment.locale('es');
 
@@ -70,7 +71,7 @@ const AdminReservas = () => {
     // Cargar propiedades al montar el componente
     const obtenerPropiedades = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/admin/propiedades', {
+        const response = await axios.get(`${API_URL}/admin/propiedades`, {
           withCredentials: true
         });
         setPropiedades(response.data.propiedades || []);
@@ -182,7 +183,7 @@ const AdminReservas = () => {
 
       if (id) {
         // Editar reserva existente
-        await axios.put(`http://localhost:5000/admin/reservas/${id}`, datosFormateados, { withCredentials: true });
+        await axios.put(`${API_URL}admin/reservas/${id}`, datosFormateados, { withCredentials: true });
         setOpenModal(true);
         setTimeout(() => {
           setOpenModal(false);
@@ -194,7 +195,7 @@ const AdminReservas = () => {
         }, 3000);
       } else {
         // Crear nueva reserva
-        await axios.post('http://localhost:5000/admin/reservas', datosFormateados, {
+        await axios.post('${API_URL}admin/reservas', datosFormateados, {
           withCredentials: true,
           headers: {
             'Content-Type': 'application/json'
@@ -229,7 +230,7 @@ const AdminReservas = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:5000/admin/reservas/verificar-disponibilidad', {
+      const response = await axios.post('${API_URL}admin/reservas/verificar-disponibilidad', {
         property: datosFormulario.propiedadId,
         checkIn: datosFormulario.fechaDesde,
         checkOut: datosFormulario.fechaHasta
@@ -243,7 +244,7 @@ const AdminReservas = () => {
 
   useEffect(() => {
     if (id && propiedades.length > 0) {
-      axios.get(`http://localhost:5000/admin/reservas/${id}`, { withCredentials: true })
+      axios.get(`${API_URL}admin/reservas/${id}`, { withCredentials: true })
         .then(res => {
           const reserva = res.data;
           // Separar el nombre completo en primer y segundo nombre
@@ -296,7 +297,7 @@ const AdminReservas = () => {
     if (datosFormulario.propiedadId) {
       const propiedadId = typeof datosFormulario.propiedadId === 'object' ? datosFormulario.propiedadId._id : datosFormulario.propiedadId;
       console.log('Fetching reservations for property ID:', propiedadId);
-      axios.get(`http://localhost:5000/admin/reservas/ocupadas/${propiedadId}`)
+      axios.get(`${API_URL}admin/reservas/ocupadas/${propiedadId}`)
         .then(res => {
           console.log('API response for reservations:', res.data);
           const eventosTransformados = res.data.map(r => ({
@@ -357,8 +358,8 @@ const AdminReservas = () => {
     <>
       <Modal show={openModal} onClose={() => setOpenModal(false)} popup>
         <ModalBody>
-          <div className="text-center pt-10">
-            <HiCheckCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+          <div className="pt-10 text-center">
+            <HiCheckCircle className="mx-auto mb-4 text-gray-400 h-14 w-14 dark:text-gray-200" />
             <h3 className="mb-5 text-lg font-normal text-gray-800">
               La reserva se ha guardado correctamente.
             </h3>
@@ -369,7 +370,7 @@ const AdminReservas = () => {
       <div className='w-11/12 m-auto mt-10'>
         <div className='flex items-center gap-5'>
           <Link
-            className='bg-lime-600 text-white rounded-full p-2 text-xl md:text-3xl hover:bg-lime-500'
+            className='p-2 text-xl text-white rounded-full bg-lime-600 md:text-3xl hover:bg-lime-500'
             title='Regresar'
             to="/admin"
           >
@@ -382,14 +383,14 @@ const AdminReservas = () => {
       </div>
 
       <div className='w-10/12 m-auto mb-5'>
-        <form className="p-3 flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-4 p-3" onSubmit={handleSubmit}>
           <p className='mt-5 ml-6 text-lg'>Información General</p>
-          <div className='border-2 py-3 px-10'>
+          <div className='px-10 py-3 border-2'>
             <div className='my-2'>
-              <div className="mb-2 block">
+              <div className="block mb-2">
                 <Label htmlFor="nombres" className='text-base uppercase'>Nombres</Label>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <TextInput
                   id="primerNombre"
                   type="text"
@@ -415,10 +416,10 @@ const AdminReservas = () => {
             </div>
 
             <div className='my-2'>
-              <div className="mb-2 block">
+              <div className="block mb-2">
                 <Label htmlFor="apellidos" className='text-base uppercase'>Apellidos</Label>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <TextInput
                   id="primerApellido"
                   type="text"
@@ -442,9 +443,9 @@ const AdminReservas = () => {
           </div>
 
           <p className='mt-5 ml-6 text-lg'>Información de contacto</p>
-          <div className='border-2 py-3 px-10'>
+          <div className='px-10 py-3 border-2'>
             <div className='my-2'>
-              <div className="mb-2 block">
+              <div className="block mb-2">
                 <Label htmlFor="telefono" className='text-base uppercase'>Teléfono</Label>
               </div>
               <TextInput
@@ -462,7 +463,7 @@ const AdminReservas = () => {
             </div>
 
             <div className='my-2'>
-              <div className="mb-2 block">
+              <div className="block mb-2">
                 <Label htmlFor="email" className='text-base uppercase'>E-mail</Label>
               </div>
               <TextInput
@@ -483,7 +484,7 @@ const AdminReservas = () => {
           </div>
 
           <p className='mt-5 ml-6 text-lg'>Información de reserva</p>
-          <div className='border-2 py-3 px-10'>
+          <div className='px-10 py-3 border-2'>
             <div className="mb-6">
               <Label htmlFor="propiedad" className='text-base uppercase'>Propiedad</Label>
               <Select
@@ -508,7 +509,7 @@ const AdminReservas = () => {
               </Select>
             </div>
 
-            <div className="flex flex-col md:flex-row items-end gap-4 mb-6">
+            <div className="flex flex-col items-end gap-4 mb-6 md:flex-row">
               <div className="flex-1">
                 <Label htmlFor="fechaDesde" className='text-base uppercase'>Desde</Label>
                 <TextInput
@@ -530,7 +531,7 @@ const AdminReservas = () => {
                 />
               </div>
               <Button
-                className="bg-lime-600 hover:bg-lime-700 text-white uppercase w-full md:w-auto"
+                className="w-full text-white uppercase bg-lime-600 hover:bg-lime-700 md:w-auto"
                 onClick={e => { e.preventDefault(); verificarDisponibilidad(); }}
                 type="button"
               >
@@ -555,15 +556,15 @@ const AdminReservas = () => {
             {disponible !== null && (
               <div className="mb-4">
                 {disponible ? (
-                  <span className="text-green-600 font-bold">¡Disponible!</span>
+                  <span className="font-bold text-green-600">¡Disponible!</span>
                 ) : (
-                  <span className="text-red-600 font-bold">No disponible para esas fechas</span>
+                  <span className="font-bold text-red-600">No disponible para esas fechas</span>
                 )}
               </div>
             )}
           </div>
 
-          <div className='w-full bg-white rounded-lg shadow-lg p-4 my-6'>
+          <div className='w-full p-4 my-6 bg-white rounded-lg shadow-lg'>
             <BigCalendar
               localizer={localizer}
               events={eventos}
