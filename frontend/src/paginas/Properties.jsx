@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { PiSealWarningBold } from "react-icons/pi";
 
-
+const API_URL = import.meta.env.VITE_API_URL;
 const Properties = () => {
   const [propiedades, setPropiedades] = useState([]);
 
@@ -16,7 +16,7 @@ const Properties = () => {
 
   const cargarPropiedades = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/admin/propiedades`)
+      const response = await axios.get(`${API_URL}/admin/propiedades`)
       const visibles = response.data.propiedades.filter(p => p.visibilidad === true).slice(-3)
       console.log(visibles)
       setPropiedades(visibles);
@@ -29,12 +29,12 @@ const Properties = () => {
       <HeaderPrincipal
       />
       <section className="pt-10">
-        <h2 className="text-3xl text-center font-bold uppercase mb-5 lg:text-5xl tracking-wider ">Propiedades</h2>
+        <h2 className="mb-5 text-3xl font-bold tracking-wider text-center uppercase lg:text-5xl ">Propiedades</h2>
       </section>
 
-      <section className=" ">
+      <section className="">
 
-        <div className="w-10/12 m-auto py-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 " >
+        <div className="grid w-10/12 grid-cols-1 gap-4 py-10 m-auto md:grid-cols-2 lg:grid-cols-3 " >
           {propiedades && propiedades.length > 0 ? (
             propiedades.map(propiedad => (
               <CardBoton
@@ -43,8 +43,8 @@ const Properties = () => {
               />
             ))
           ) : (
-            <div className="m-auto md:col-span-2 lg:col-span-3 text-center text-gray-400 flex flex-col items-center mb-10">
-              <PiSealWarningBold className="text-9xl mb-5" />
+            <div className="flex flex-col items-center m-auto mb-10 text-center text-gray-400 md:col-span-2 lg:col-span-3">
+              <PiSealWarningBold className="mb-5 text-9xl" />
               <p className="text-xl font-bold md:w-1/2">¡Lo sentimos, No hay propiedades disponibles en este momento!</p>
             </div>
           )}
