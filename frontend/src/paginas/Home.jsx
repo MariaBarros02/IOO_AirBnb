@@ -17,7 +17,7 @@ const Home = () => {
 
   const cargarPropiedadesMostrar = async () => {
     try {
-      const response = await axios.get(`https://ioo-airbnb.onrender.com/admin/propiedades`)
+      const response = await axios.get(`${API_URL}/admin/propiedades`)
 
       const visibles = response.data.propiedades.filter(p => p.visibilidad === true).slice(-3)
       setPropiedadesMostrar(visibles)
