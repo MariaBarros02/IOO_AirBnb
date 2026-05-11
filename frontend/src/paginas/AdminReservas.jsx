@@ -230,7 +230,7 @@ const AdminReservas = () => {
       return;
     }
     try {
-      const response = await axios.post('${API_URL}admin/reservas/verificar-disponibilidad', {
+      const response = await axios.post(`${API_URL}admin/reservas/verificar-disponibilidad`, {
         property: datosFormulario.propiedadId,
         checkIn: datosFormulario.fechaDesde,
         checkOut: datosFormulario.fechaHasta
