@@ -1,7 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
-const API_URL =  import.meta.env.VITE_API_URL;
+const env = loadEnv(mode, process.cwd(), "");
+const apiUrl = env.VITE_API_URL;
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -48,7 +49,7 @@ export default defineConfig({
         // porque necesitas datos frescos y cookies httpOnly funcionando
         runtimeCaching: [
           {
-            urlPattern: ({ url }) => url.origin === API_URL,
+            urlPattern: ({ url }) => url.origin === api_url,
             handler: "NetworkOnly",
           },
         ],
