@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await loginRequest(userData);
       setIsAuthenticated(true);
-      setUser(res.data.user);
+      setUser(res.data);
     } catch (error) {
       setErrors(error.response?.data || ["Error al iniciar sesión"]);
     }

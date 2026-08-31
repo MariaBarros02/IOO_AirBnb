@@ -7,6 +7,7 @@ import { HiCheckCircle } from 'react-icons/hi';
 import { formatearDinero } from '../utils/formatearDinero';
 import { usePropiedad } from '../context/PropiedadContext.jsx';
 import HeaderAdministrador from '../layout/HeaderAdministrador';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const CATEGORIAS_INVENTARIO = ['habitaciones', 'bano', 'cocina', 'entretenimiento']
 
@@ -562,7 +563,7 @@ const AdminPropiedad = () => {
                                         {imagenesExistentes.map((img, index) => (
                                             <div key={`existente-${index}`} className="relative">
                                                 <img
-                                                    src={`http://localhost:5000${img}`}
+                                                    src={`${API_URL}${img}`}
                                                     alt={`Imagen ${index + 1}`}
                                                     className="object-cover w-20 h-20 rounded"
                                                 />

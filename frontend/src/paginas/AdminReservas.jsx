@@ -183,7 +183,7 @@ const AdminReservas = () => {
 
       if (id) {
         // Editar reserva existente
-        await axios.put(`${API_URL}admin/reservas/${id}`, datosFormateados, { withCredentials: true });
+        await axios.put(`${API_URL}/admin/reservas/${id}`, datosFormateados, { withCredentials: true });
         setOpenModal(true);
         setTimeout(() => {
           setOpenModal(false);
@@ -195,7 +195,7 @@ const AdminReservas = () => {
         }, 3000);
       } else {
         // Crear nueva reserva
-        await axios.post('${API_URL}admin/reservas', datosFormateados, {
+        await axios.post(`${API_URL}/admin/reservas`, datosFormateados, {
           withCredentials: true,
           headers: {
             'Content-Type': 'application/json'
@@ -230,7 +230,7 @@ const AdminReservas = () => {
       return;
     }
     try {
-      const response = await axios.post(`${API_URL}admin/reservas/verificar-disponibilidad`, {
+      const response = await axios.post(`${API_URL}/admin/reservas/verificar-disponibilidad`, {
         property: datosFormulario.propiedadId,
         checkIn: datosFormulario.fechaDesde,
         checkOut: datosFormulario.fechaHasta
@@ -244,7 +244,7 @@ const AdminReservas = () => {
 
   useEffect(() => {
     if (id && propiedades.length > 0) {
-      axios.get(`${API_URL}admin/reservas/${id}`, { withCredentials: true })
+      axios.get(`${API_URL}/admin/reservas/${id}`, { withCredentials: true })
         .then(res => {
           const reserva = res.data;
           // Separar el nombre completo en primer y segundo nombre
@@ -297,7 +297,7 @@ const AdminReservas = () => {
     if (datosFormulario.propiedadId) {
       const propiedadId = typeof datosFormulario.propiedadId === 'object' ? datosFormulario.propiedadId._id : datosFormulario.propiedadId;
       console.log('Fetching reservations for property ID:', propiedadId);
-      axios.get(`${API_URL}admin/reservas/ocupadas/${propiedadId}`)
+      axios.get(`${API_URL}/admin/reservas/ocupadas/${propiedadId}`)
         .then(res => {
           console.log('API response for reservations:', res.data);
           const eventosTransformados = res.data.map(r => ({

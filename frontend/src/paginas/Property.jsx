@@ -23,7 +23,7 @@ const Property = () => {
 
   const cargarPropiedad = async () => {
     try {
-      const response = await axios.get(`${API_URL}admin/propiedad/${idPropiedad}`, {
+      const response = await axios.get(`${API_URL}/admin/propiedad/${idPropiedad}`, {
         withCredentials: true,
       })
       setPropiedad(response.data);
@@ -59,7 +59,7 @@ const Property = () => {
                 <Carousel>
                   {
                     propiedad.imagenes.map((imagen, index) => (
-                      <img src={`http://localhost:5000${imagen}`} alt="..." key={index} />
+                      <img src={`${API_URL}${imagen}`} alt="..." key={index} />
                     )
                     )}
                 </Carousel>

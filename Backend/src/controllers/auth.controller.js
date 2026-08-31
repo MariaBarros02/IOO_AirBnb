@@ -1,6 +1,12 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { createAccessToken } from "../libs/jwt.js";
+import { IS_PROD } from "../config.js";
+const cookieOptions = {
+  httpsOnly: true,
+  secure: IS_PROD,
+  sameSite: IS_PROD ? "none" : "lax",
+};
 export const register = async (req, res) => {
   const {
     name,
@@ -39,7 +45,7 @@ export const register = async (req, res) => {
       id: userSaved._id,
       role: userSaved.role,
     });
-    
+
     res.json({
       id: userSaved._id,
       name: userSaved.name,
@@ -74,9 +80,8 @@ export const login = async (req, res) => {
     });
 
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none"
+      ...cookieOptions,
+      maxAge: 1000 * 60 * 60 * 24, // 30 días
     });
     res.json({
       id: userFound._id,
@@ -95,9 +100,7 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   res.cookie("token", "", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: false,
+    ...cookieOptions,
     expires: new Date(0),
   });
   return res.sendStatus(200);

@@ -9,6 +9,8 @@ import cors from "cors";
 import path from 'path';
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./swagger.js";
 
 dotenv.config();
 
@@ -22,6 +24,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 
 app.use('/uploads', express.static(path.join(__directorioArchivo, 'public/uploads')))
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);

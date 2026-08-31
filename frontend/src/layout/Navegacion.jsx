@@ -1,19 +1,12 @@
 import { Link } from "react-router-dom"
 import { useEffect, useState } from "react";
-import Cookies from 'js-cookie';
 import { Button } from "flowbite-react";
 import { useAuth } from "../context/AuthContext";
 import { FiLogOut } from "react-icons/fi";
 function Navegacion() {
 
-  const [token, setToken] = useState('');
-  const { logout: useLogout } = useAuth();
+  const {isAuthenticated, logout: useLogout } = useAuth();
 
-  useEffect(() => {
-    setToken(Cookies.get('token'))
-
-    
-  }, []);
   useEffect(() => {
     const btnMenu = document.querySelector('#btn-menu');
     const menu = document.querySelector('#menu');
@@ -54,7 +47,7 @@ function Navegacion() {
           <Link className="py-2 hover:bg-[#00000030] w-full text-center uppercase lg:py-5" to="/paraSocios">Para socios</Link>
           <Link className="py-2 hover:bg-[#00000030] w-full text-center uppercase lg:py-5" to="/propiedades">Propiedades</Link>
           <Link className="py-2 hover:bg-[#00000030] w-full text-center uppercase lg:py-5" to="/nosotros">Nosotros</Link>
-          {!token ? (
+          {!isAuthenticated ? (
             <div className="flex gap-2 justify-center items-center flex-col lg:flex-row lg:px-5 uppercase">
               <Link className=" rounded  hover:bg-cyan-500 bg-white text-cyan-700 hover:text-white p-2 text-sm m-auto flex items-center text-center justify-center w-36" to='/login'> Iniciar Sesión</Link>
               <Link className=" rounded bg-cyan-600  hover:bg-gray-100 hover:text-cyan-700 text-white p-2 text-sm m-auto flex items-center justify-center " to='/register'> Registrarse</Link>
